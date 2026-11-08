@@ -1,0 +1,7 @@
+--resource
+D:/Projects/Android/AssignmentManager/AssignmentManager/build/Qt_6_8_3_for_Android_x86_64-Debug/.qt/rcc/qmake_AssignmentManager.qrc
+--resource
+D:/Projects/Android/AssignmentManager/AssignmentManager/build/Qt_6_8_3_for_Android_x86_64-Debug/.qt/rcc/appAssignmentManager_raw_qml_0.qrc
+/qt/qml/AssignmentManager/Main.qml
+/qt/qml/AssignmentManager/MainScreen.ui.qml
+/qt/qml/AssignmentManager/Constants.qml

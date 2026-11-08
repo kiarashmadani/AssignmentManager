@@ -1,0 +1,36 @@
+[
+    {
+        "moduleFiles": [
+            {
+                "entries": [
+                    {
+                        "codegenSuccessfull": true,
+                        "column": 33,
+                        "durationMicroseconds": 472,
+                        "errorMessage": "",
+                        "functionName": "windowColor",
+                        "line": 10
+                    },
+                    {
+                        "codegenSuccessfull": true,
+                        "column": 33,
+                        "durationMicroseconds": 265,
+                        "errorMessage": "",
+                        "functionName": "textColor",
+                        "line": 11
+                    },
+                    {
+                        "codegenSuccessfull": true,
+                        "column": 33,
+                        "durationMicroseconds": 249,
+                        "errorMessage": "",
+                        "functionName": "accentColor",
+                        "line": 12
+                    }
+                ],
+                "filepath": "D:/Projects/Android/AssignmentManager/AssignmentManager/Constants.qml"
+            }
+        ],
+        "moduleId": "AssignmentManager(appAssignmentManager)"
+    }
+]

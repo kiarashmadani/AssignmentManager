@@ -1,0 +1,286 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-447a32ad748b12963254.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "AssignmentManager",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "_qt_internal_apk_dependencies::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-_qt_internal_apk_dependencies-Debug-31e070396684d39f2cda.json",
+					"name" : "_qt_internal_apk_dependencies",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "aab::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-aab-Debug-3ee4f9fec5e1942fc53f.json",
+					"name" : "aab",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "aar::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-aar-Debug-19594f7643d2a95ba07a.json",
+					"name" : "aar",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "all_aotstats::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-all_aotstats-Debug-4ca285ea2e5de8d4185a.json",
+					"name" : "all_aotstats",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "all_qmllint::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-all_qmllint-Debug-1b43b261def50e5bbf41.json",
+					"name" : "all_qmllint",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "all_qmllint_json::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-all_qmllint_json-Debug-a8ba7989f7657074dfe0.json",
+					"name" : "all_qmllint_json",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "all_qmllint_module::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-all_qmllint_module-Debug-42ba70a805b7b853cbd5.json",
+					"name" : "all_qmllint_module",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "all_qmltyperegistrations::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-all_qmltyperegistrations-Debug-52b44a0614cd59d7a8f1.json",
+					"name" : "all_qmltyperegistrations",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "apk::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-apk-Debug-bbd996bfe299de9e454a.json",
+					"name" : "apk",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "apk_all::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-apk_all-Debug-e9961f043b8757d14788.json",
+					"name" : "apk_all",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager-Debug-3b16cef11fa10dd3e86b.json",
+					"name" : "appAssignmentManager",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_autogen-Debug-c37fbc5da42bd0aa2957.json",
+					"name" : "appAssignmentManager_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_autogen_timestamp_deps-Debug-f139c1d33c0dc663a490.json",
+					"name" : "appAssignmentManager_autogen_timestamp_deps",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_copy_apk_dependencies::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_copy_apk_dependencies-Debug-bef8df7b8d373b0868a3.json",
+					"name" : "appAssignmentManager_copy_apk_dependencies",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_copy_qml::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_copy_qml-Debug-beb299e1737877ca76f4.json",
+					"name" : "appAssignmentManager_copy_qml",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_copy_res::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_copy_res-Debug-4470d4d5df18187bd5e7.json",
+					"name" : "appAssignmentManager_copy_res",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_make_aab::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_make_aab-Debug-ec25116f67e57ae84f5c.json",
+					"name" : "appAssignmentManager_make_aab",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_make_aar::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_make_aar-Debug-b4fdd041cc96247af7be.json",
+					"name" : "appAssignmentManager_make_aar",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_make_apk::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_make_apk-Debug-b989562d4c272226be32.json",
+					"name" : "appAssignmentManager_make_apk",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_prepare_apk_dir::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_prepare_apk_dir-Debug-10b0cead2fa7f5c09c97.json",
+					"name" : "appAssignmentManager_prepare_apk_dir",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_qmllint::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_qmllint-Debug-808773ef4a30fd5eeb29.json",
+					"name" : "appAssignmentManager_qmllint",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_qmllint_json::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_qmllint_json-Debug-20e02929e3de9436156d.json",
+					"name" : "appAssignmentManager_qmllint_json",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_qmllint_module::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_qmllint_module-Debug-41fa4cdde904b69e1723.json",
+					"name" : "appAssignmentManager_qmllint_module",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "appAssignmentManager_qmltyperegistration::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-appAssignmentManager_qmltyperegistration-Debug-18072c747ee7ad91913d.json",
+					"name" : "appAssignmentManager_qmltyperegistration",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "module_appAssignmentManager_aotstats_target::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-module_appAssignmentManager_aotstats_target-Debug-ae0b1f1685748a74a73b.json",
+					"name" : "module_appAssignmentManager_aotstats_target",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "qt_internal_plugins::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-qt_internal_plugins-Debug-ca1ca994c7d24dc7ed5d.json",
+					"name" : "qt_internal_plugins",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/Projects/Android/AssignmentManager/AssignmentManager/build/Qt_6_8_3_for_Android_x86_64-Debug",
+		"source" : "D:/Projects/Android/AssignmentManager/AssignmentManager"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

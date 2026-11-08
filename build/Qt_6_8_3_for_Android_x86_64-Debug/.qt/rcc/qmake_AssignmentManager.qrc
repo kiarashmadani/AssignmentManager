@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/qt/qml/AssignmentManager">
+    <file alias="qmldir">D:/Projects/Android/AssignmentManager/AssignmentManager/build/Qt_6_8_3_for_Android_x86_64-Debug/AssignmentManager/qmldir</file>
+  </qresource>
+</RCC>
+

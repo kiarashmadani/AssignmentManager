@@ -1,0 +1,10 @@
+-I
+D:/Projects/Android/AssignmentManager/AssignmentManager/build/Desktop_Qt_6_8_3_MSVC2022_64bit-Release
+-I
+C:/Qt/6.8.3/msvc2022_64/qml
+--resource
+D:/Projects/Android/AssignmentManager/AssignmentManager/build/Desktop_Qt_6_8_3_MSVC2022_64bit-Release/.qt/rcc/qmake_AssignmentManager.qrc
+--resource
+D:/Projects/Android/AssignmentManager/AssignmentManager/build/Desktop_Qt_6_8_3_MSVC2022_64bit-Release/.qt/rcc/appAssignmentManager_raw_qml_0.qrc
+--module
+AssignmentManager

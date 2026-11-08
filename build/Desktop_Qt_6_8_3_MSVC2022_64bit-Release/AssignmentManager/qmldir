@@ -1,0 +1,7 @@
+module AssignmentManager
+typeinfo appAssignmentManager.qmltypes
+prefer :/qt/qml/AssignmentManager/
+Main 254.0 Main.qml
+MainScreen 254.0 MainScreen.ui.qml
+singleton Constants 254.0 Constants.qml
+

@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="/qt/qml/AssignmentManager/">
+    <file alias="Main.qml">D:/Projects/Android/AssignmentManager/AssignmentManager/Main.qml</file>
+    <file alias="MainScreen.ui.qml">D:/Projects/Android/AssignmentManager/AssignmentManager/MainScreen.ui.qml</file>
+    <file alias="Constants.qml">D:/Projects/Android/AssignmentManager/AssignmentManager/Constants.qml</file>
+  </qresource>
+</RCC>
+
