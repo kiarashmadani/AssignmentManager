@@ -20,6 +20,8 @@ qt_add_qml_module(appAssignmentManager
     QML_FILES Main.qml
     QML_FILES MainScreen.ui.qml
     QML_FILES Constants.qml
+    QML_FILES NavBar.ui.qml
+    QML_FILES NavTab.ui.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

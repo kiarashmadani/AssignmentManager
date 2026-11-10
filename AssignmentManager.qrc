@@ -1,0 +1,10 @@
+<RCC>
+    <qresource>
+        <file>AssignmentManager.qmlproject</file>
+        <file>Constants.qml</file>
+        <file>Main.qml</file>
+        <file>MainScreen.ui.qml</file>
+        <file>NavBar.ui.qml</file>
+        <file>NavTab.ui.qml</file>
+    </qresource>
+</RCC>
