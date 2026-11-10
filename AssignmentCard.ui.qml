@@ -24,8 +24,8 @@ Rectangle {
             text: assignmentCard.title
             wrapMode: Text.WordWrap
             font.pixelSize: Constants.bodySize + 2
-            font.bold: true
-            color: Constants.cardForeground
+            font.weight: Font.DemiBold
+            color: Constants.mutedForeground
         }
         Text {
             id: cardDescription

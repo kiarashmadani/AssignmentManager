@@ -161,28 +161,28 @@ Item {
     }
 
     // Interactive pointer/finger light reflection across the glass bar surface
-    Rectangle {
-        anchors.fill: parent
-        radius: height / 2
-        clip: true
-        color: "transparent"
+    // Rectangle {
+    //     anchors.fill: parent
+    //     radius: height / 2
+    //     clip: true
+    //     color: "transparent"
 
-        Rectangle {
-            width: bar.width * 0.55
-            height: bar.height * 2.2
-            radius: width / 2
-            x: (touch.containsMouse || bar.dragging ? touch.mouseX : lens.center) - width / 2
-            y: (touch.containsMouse || bar.dragging ? touch.mouseY : bar.height * 0.3) - height / 2
-            opacity: (touch.containsMouse || bar.dragging) ? 0.42 : 0.18
-            Behavior on opacity { NumberAnimation { duration: 200 } }
-            Behavior on x { SmoothedAnimation { velocity: 900 } }
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: Constants.glassEdge }
-                GradientStop { position: 0.5; color: Constants.glassShine }
-                GradientStop { position: 1.0; color: "#00FFFFFF" }
-            }
-        }
-    }
+    //     Rectangle {
+    //         width: bar.width * 0.55
+    //         height: bar.height * 2.2
+    //         radius: width / 2
+    //         x: (touch.containsMouse || bar.dragging ? touch.mouseX : lens.center) - width / 2
+    //         y: (touch.containsMouse || bar.dragging ? touch.mouseY : bar.height * 0.3) - height / 2
+    //         opacity: (touch.containsMouse || bar.dragging) ? 0.42 : 0.18
+    //         Behavior on opacity { NumberAnimation { duration: 200 } }
+    //         Behavior on x { SmoothedAnimation { velocity: 900 } }
+    //         gradient: Gradient {
+    //             GradientStop { position: 0.0; color: Constants.glassEdge }
+    //             GradientStop { position: 0.5; color: Constants.glassShine }
+    //             GradientStop { position: 1.0; color: "#00FFFFFF" }
+    //         }
+    //     }
+    // }
 
     // Top meniscus catchlight strip (thin intense reflection along the upper curvature)
     Rectangle {
