@@ -1,9 +1,12 @@
 <RCC>
     <qresource>
+        <file>AssignmentCard.ui.qml</file>
         <file>AssignmentManager.qmlproject</file>
+        <file>AssignmentsPage.ui.qml</file>
         <file>Constants.qml</file>
         <file>Main.qml</file>
         <file>MainScreen.ui.qml</file>
         <file>NavBar.qml</file>
+        <file>SettingsPage.ui.qml</file>
     </qresource>
 </RCC>

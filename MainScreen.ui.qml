@@ -1,42 +1,40 @@
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls.Basic
+import QtQuick.Layouts
 
-Rectangle {
+Item {
     id: root
-
     width: Constants.width
     height: Constants.height
 
-    color: Constants.windowColor
+    property alias pages: pages
+    property alias navBar: navBar
+    property alias addButton: addButton
 
-    ColumnLayout {
-        id: columnLayout
+    Rectangle {
+        id: page
         anchors.fill: parent
-        anchors.margins: Constants.padding
-        spacing: Constants.spacing
+        color: Constants.background
 
-        Text {
-            id: assignmentText
-            Layout.fillWidth: true
+        SwipeView {
+            id: pages
+            anchors.fill: parent
+            currentIndex: navBar.currentIndex
 
-            text: qsTr("Assignments")
-            color: Constants.textColor
-            font.pixelSize: Constants.titleSize
-            font.bold: true
-
-            anchors.top: parent.top
+            AssignmentsPage {}
+            SettingsPage {}
         }
     }
+
     Button {
         id: addButton
         width: 56
         height: 56
         padding: 0
+        visible: navBar.currentIndex === 0
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.margins: Constants.padding * 2
-
+        anchors.bottom: navBar.top
+        anchors.margins: Constants.padding
         text: "+"
 
         background: Rectangle {
@@ -44,7 +42,6 @@ Rectangle {
             color: Constants.primary
             opacity: addButton.down ? 0.85 : 1.0
         }
-
         contentItem: Item {
             Rectangle {
                 anchors.centerIn: parent
@@ -57,5 +54,13 @@ Rectangle {
                 color: Constants.primaryForeground
             }
         }
+    }
+
+    NavBar {
+        id: navBar
+        blurSource: page
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottomMargin: Constants.padding
     }
 }

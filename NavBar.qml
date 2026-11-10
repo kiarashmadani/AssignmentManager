@@ -17,7 +17,7 @@ Item {
     readonly property real tabWidth: (width - 2 * pad) / tabs.length
     readonly property bool dragging: touch.pressed
     // The tab the lens is over right now (used for the label colors)
-    readonly property int lensIndex: indexAt(lens.x + lens.width / 2)
+    readonly property int lensIndex: indexAt(lens.center)
 
     function indexAt(xPos) {
         return Math.max(0, Math.min(tabs.length - 1, Math.floor((xPos - pad) / tabWidth)))
@@ -26,27 +26,8 @@ Item {
     implicitWidth: 260
     implicitHeight: 60
 
-    // ── The glass pill: 5 layers ────────────────────────────
-    // 1. Soft shadow under the pill
-    Rectangle {
-        id: shadowShape
-        anchors.fill: parent
-        radius: height / 2
-        color: Constants.background
-        layer.enabled: true
-        visible: false
-    }
-    MultiEffect {
-        anchors.fill: parent
-        source: shadowShape
-        shadowEnabled: true
-        shadowColor: Constants.shadowColor
-        shadowOpacity: Constants.shadowOpacity
-        shadowBlur: 1.0
-        shadowVerticalOffset: 6
-    }
-
-    // 2. A blurred copy of whatever is behind the bar
+    // ── The glass pill: 4 layers ────────────────────────────
+    // 1. A blurred copy of whatever is behind the bar
     ShaderEffectSource {
         id: behind
         anchors.fill: parent
@@ -74,7 +55,7 @@ Item {
         maskSource: pillMask
     }
 
-    // 3. Tint in the theme's color
+    // 2. Tint in the theme's color
     Rectangle {
         anchors.fill: parent
         radius: height / 2
@@ -82,7 +63,7 @@ Item {
         opacity: 0.45
     }
 
-    // 4. Shine: fades from the top edge to the middle
+    // 3. Shine: fades from the top edge to the middle
     Rectangle {
         anchors.fill: parent
         radius: height / 2
@@ -92,7 +73,7 @@ Item {
         }
     }
 
-    // 5. Thin bright edge
+    // 4. Thin bright edge
     Rectangle {
         anchors.fill: parent
         radius: height / 2
@@ -104,19 +85,23 @@ Item {
     // ── The lens: the highlight that slides to the selected tab ──
     Item {
         id: lens
-        width: bar.tabWidth
-        height: bar.height - 2 * bar.pad
+        // How many pixels the lens grows on every side while dragging.
+        // Keep it smaller than bar.pad, so the lens never leaves the pill.
+        property real grow: bar.dragging ? 4 : 0
+        Behavior on grow { NumberAnimation { duration: 200; easing.type: Easing.OutBack } }
 
-        // Resting: sits on the current tab. Dragging: follows the finger, kept inside the bar.
-        x: bar.dragging
-           ? Math.max(bar.pad, Math.min(bar.width - bar.pad - width, touch.mouseX - width / 2))
-           : bar.pad + bar.currentIndex * bar.tabWidth
-        y: bar.pad - (bar.dragging ? 4 : 0)         // lifts a little
-        scale: bar.dragging ? 1.18 : 1.0            // grows a little
+        // Where the middle of the lens is.
+        // Resting: the middle of the current tab. Dragging: under the finger, kept inside the pill.
+        property real center: bar.dragging
+            ? Math.max(bar.pad + bar.tabWidth / 2,
+                       Math.min(bar.width - bar.pad - bar.tabWidth / 2, touch.mouseX))
+            : bar.pad + (bar.currentIndex + 0.5) * bar.tabWidth
+        Behavior on center { SmoothedAnimation { velocity: 1000 } }
 
-        Behavior on x { SpringAnimation { spring: 5; damping: 0.5; epsilon: 0.25 } }
-        Behavior on y { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
-        Behavior on scale { NumberAnimation { duration: 260; easing.type: Easing.OutBack } }
+        width: bar.tabWidth + 2 * grow
+        height: bar.height - 2 * bar.pad + 2 * grow
+        x: center - width / 2
+        y: (bar.height - height) / 2
 
         // Colored body: solid when resting, see-through like glass when dragging
         Rectangle {
@@ -126,15 +111,6 @@ Item {
             color: Constants.primary
             opacity: bar.dragging ? 0.55 : 1.0
             Behavior on opacity { NumberAnimation { duration: 200 } }
-
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                shadowEnabled: true
-                shadowColor: Constants.shadowColor
-                shadowOpacity: bar.dragging ? 0.35 : 0.0
-                shadowBlur: 0.8
-                shadowVerticalOffset: 5
-            }
         }
         // Shine and bright edge, only visible while dragging
         Rectangle {

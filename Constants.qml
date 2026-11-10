@@ -15,9 +15,9 @@ QtObject {
     // ── Themes ──────────────────────────────────────────────
     // Converted from the OKLCH CSS palettes to hex (QML has no oklch()).
     // Every theme must have exactly the same keys.
-    property int themeIndex: 0
+    property int themeIndex: 6
 
-    readonly property int titleSize: 28
+    readonly property int titleSize: 22
     readonly property int bodySize: 16
     readonly property int captionSize: 13
 

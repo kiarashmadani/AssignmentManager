@@ -14,4 +14,11 @@ Window {
         id: mainScreen
         anchors.fill: parent
     }
+
+    Connections {
+        target: mainScreen.pages
+        function onCurrentIndexChanged () {
+            mainScreen.navBar.currentIndex = mainScreen.pages.currentIndex
+        }
+    }
 }
