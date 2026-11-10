@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/">
-    <file alias="/qt/qml/AssignmentManager/qmlproject">D:/Projects/Android/AssignmentManager/AssignmentManager/build/Desktop_Qt_6_8_3_MSVC2022_64bit-Release/AssignmentManager/qmlproject</file>
-
-  </qresource>
-</RCC>

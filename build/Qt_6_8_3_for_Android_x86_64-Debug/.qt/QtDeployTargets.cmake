@@ -1,2 +1,0 @@
-set(__QT_DEPLOY_TARGET_appAssignmentManager_FILE D:/Projects/Android/AssignmentManager/AssignmentManager/build/Qt_6_8_3_for_Android_x86_64-Debug/libappAssignmentManager_x86_64.so)
-set(__QT_DEPLOY_TARGET_appAssignmentManager_TYPE MODULE_LIBRARY)
