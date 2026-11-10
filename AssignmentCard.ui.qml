@@ -5,6 +5,8 @@ Rectangle {
     id: assignmentCard
     property string title: "Assignment"
     property string descriptions: "Descriptions"
+    property string deadlineHours: "00"
+    property string deadlineMinutes: "00"
 
     implicitHeight: content.implicitHeight + 2 * Constants.padding
     color: Constants.card

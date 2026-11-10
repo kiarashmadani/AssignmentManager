@@ -119,7 +119,7 @@ Item {
                 anchors.margins: Constants.padding
                 text: qsTr("Assignments")
                 color: Constants.foreground
-                font.pixelSize: Constants.titleSize + 6
+                font.pixelSize: Constants.titleSize + 16
                 font.bold: true
             }
         }
