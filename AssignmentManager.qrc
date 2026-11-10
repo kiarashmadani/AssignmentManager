@@ -4,7 +4,6 @@
         <file>Constants.qml</file>
         <file>Main.qml</file>
         <file>MainScreen.ui.qml</file>
-        <file>NavBar.ui.qml</file>
-        <file>NavTab.ui.qml</file>
+        <file>NavBar.qml</file>
     </qresource>
 </RCC>

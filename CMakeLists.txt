@@ -17,11 +17,11 @@ set_source_files_properties(Constants.qml
 
 qt_add_qml_module(appAssignmentManager
     URI AssignmentManager
-    QML_FILES Main.qml
-    QML_FILES MainScreen.ui.qml
-    QML_FILES Constants.qml
-    QML_FILES NavBar.ui.qml
-    QML_FILES NavTab.ui.qml
+    QML_FILES
+        Main.qml
+        Constants.qml
+        MainScreen.ui.qml
+        NavBar.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

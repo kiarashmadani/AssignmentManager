@@ -21,6 +21,11 @@ QtObject {
     readonly property int bodySize: 16
     readonly property int captionSize: 13
 
+    readonly property color glassShine: isDark ? "#26FFFFFF" : "#80FFFFFF"
+    readonly property color glassEdge: isDark ? "#40FFFFFF" : "#CCFFFFFF"
+    readonly property color shadowColor: "#000000"
+    readonly property real shadowOpacity: isDark ? 0.5 : 0.18
+
     readonly property var themes: [
         {
             name: "Crimson Dark",
