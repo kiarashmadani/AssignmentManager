@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
+import QtQuick.Effects
 
 Item {
     id: root
@@ -55,6 +56,51 @@ Item {
             }
         }
     }
+
+    Item {
+            id: navBarBlurStrip
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            height: navBar.height + Constants.padding * 2
+
+            ShaderEffectSource {
+                id: bottomStripSource
+                anchors.fill: parent
+                sourceItem: page
+                sourceRect: Qt.rect(0, root.height - parent.height, root.width, parent.height)
+                live: true
+                visible: false
+            }
+
+            Rectangle {
+                id: bottomStripMask
+                anchors.fill: parent
+                layer.enabled: true
+                visible: false
+                gradient: Gradient {
+                    // Smoothly fades from 0% at the top edge down to 100% at the bottom
+                    GradientStop { position: 0.00; color: "#00FFFFFF" }
+                    GradientStop { position: 0.30; color: "#26FFFFFF" }
+                    GradientStop { position: 0.65; color: "#99FFFFFF" }
+                    GradientStop { position: 1.00; color: "#FFFFFFFF" }
+                }
+            }
+
+            MultiEffect {
+                anchors.fill: parent
+                source: bottomStripSource
+                autoPaddingEnabled: false
+                blurEnabled: true
+                blur: 0.45                 // Subtle blur intensity
+                blurMax: 22                // Gentle radius (like iOS Photos bar)
+                saturation: 0.15
+                maskEnabled: true
+                maskSource: bottomStripMask
+                maskThresholdMin: 0.5      // Required so MultiEffect respects the smooth gradient alpha
+                maskSpreadAtMin: 1.0       // Maps alpha 0.0 -> 1.0 smoothly instead of a hard cut
+            }
+        }
 
     NavBar {
         id: navBar
