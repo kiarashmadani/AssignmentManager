@@ -25,6 +25,7 @@ qt_add_qml_module(appAssignmentManager
         AssignmentsPage.ui.qml
         SettingsPage.ui.qml
         AssignmentCard.ui.qml
+        ThemeButton.ui.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -8,5 +8,6 @@
         <file>MainScreen.ui.qml</file>
         <file>NavBar.qml</file>
         <file>SettingsPage.ui.qml</file>
+        <file>ThemeButton.ui.qml</file>
     </qresource>
 </RCC>

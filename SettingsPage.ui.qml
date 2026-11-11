@@ -7,13 +7,13 @@ Item {
     id: root
     width: Constants.width
     height: Constants.height
+    property alias themeGroup: themeGroup
 
     Rectangle {
         id: page
         anchors.fill: parent
         color: Constants.background
 
-        // Content layer that extends all the way to the top of the screen
         Rectangle {
             id: contentArea
             anchors.fill: parent
@@ -25,13 +25,42 @@ Item {
                 anchors.topMargin: Constants.padding + settingsText.implicitHeight + Constants.spacing
                 spacing: Constants.spacing
 
+                Text {
+                    id: appearanceText
+                    text: qsTr("Appearance")
+                    color: Constants.foreground
+                    font.pixelSize: Constants.bodySize
+                    Layout.fillWidth: true
+                }
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 1
+                    color: Constants.border
+                }
+
+                GridLayout {
+                    columns: 3
+                    rowSpacing: Constants.spacing
+                    columnSpacing: Constants.spacing
+                    Layout.fillWidth: true
+
+                    ButtonGroup { id: themeGroup }
+
+                    ThemeButton {themeIndex:0; Layout.fillWidth: true; ButtonGroup.group: themeGroup }
+                    ThemeButton {themeIndex:1; Layout.fillWidth: true; ButtonGroup.group: themeGroup }
+                    ThemeButton {themeIndex:2; Layout.fillWidth: true; ButtonGroup.group: themeGroup  }
+                    ThemeButton {themeIndex:3; Layout.fillWidth: true; ButtonGroup.group: themeGroup  }
+                    ThemeButton {themeIndex:4; Layout.fillWidth: true; ButtonGroup.group: themeGroup  }
+                    ThemeButton {themeIndex:5; Layout.fillWidth: true; ButtonGroup.group: themeGroup  }
+                }
+
                 Item { Layout.fillHeight: true }
             }
         }
 
-        // Top progressive blur strip behind the Settings title
         Item {
             id: topBlurStrip
+            z: 10
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
@@ -52,12 +81,18 @@ Item {
                 layer.enabled: true
                 visible: false
                 gradient: Gradient {
-                    // 100% blur at the top edge, fading smoothly to 0% transparent at the bottom
-                    GradientStop { position: 0.00; color: "#FFFFFFFF" }
-                    GradientStop { position: 0.35; color: "#99FFFFFF" }
-                    GradientStop { position: 0.70; color: "#26FFFFFF" }
-                    GradientStop { position: 1.00; color: "#00FFFFFF" }
+                    GradientStop { position: 0.0; color: "#FFFFFFFF" }
+                    GradientStop { position: 1.0; color: "#00FFFFFF" }
                 }
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: Constants.background }
+                    GradientStop { position: 1.0; color: "#00000000" }
+                }
+                opacity: 0.55
             }
 
             MultiEffect {
@@ -65,27 +100,26 @@ Item {
                 source: topStripSource
                 autoPaddingEnabled: false
                 blurEnabled: true
-                blur: 0.45
-                blurMax: 22
+                blur: 0.7
+                blurMax: 50
                 saturation: 0.15
                 maskEnabled: true
                 maskSource: topStripMask
                 maskThresholdMin: 0.5
                 maskSpreadAtMin: 1.0
             }
-        }
 
-        // Floating title on top of the blur strip
-        Text {
-            id: settingsText
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.margins: Constants.padding
-            text: qsTr("Settings")
-            color: Constants.foreground
-            font.pixelSize: Constants.titleSize
-            font.bold: true
+            Text {
+                id: settingsText
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.margins: Constants.padding
+                text: qsTr("Settings")
+                color: Constants.foreground
+                font.pixelSize: Constants.titleSize + 16
+                font.bold: true
+            }
         }
     }
 }

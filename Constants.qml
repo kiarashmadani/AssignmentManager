@@ -15,7 +15,7 @@ QtObject {
     // ── Themes ──────────────────────────────────────────────
     // Converted from the OKLCH CSS palettes to hex (QML has no oklch()).
     // Every theme must have exactly the same keys.
-    property int themeIndex: 4
+    property int themeIndex:2
 
     readonly property int titleSize: 22
     readonly property int bodySize: 16
@@ -27,204 +27,267 @@ QtObject {
     readonly property real shadowOpacity: isDark ? 0.5 : 0.18
 
     readonly property var themes: [
+
+        // 01. CRIMSON DARK
         {
             name: "Crimson Dark",
             dark: true,
-            radius: 6,
-            background: "#1C1917",
-            foreground: "#F5F5F4",
-            card: "#292524",
-            cardForeground: "#F5F5F4",
-            primary: "#B91C1C",
-            primaryForeground: "#FAF7F5",
-            secondary: "#92400E",
-            secondaryForeground: "#FEF3C7",
-            muted: "#1F1C1A",
-            mutedForeground: "#D6D3D1",
-            accent: "#B45309",
-            accentForeground: "#FEF3C7",
-            destructive: "#EF4444",
+            radius: 10,
+
+            background: "#181216",
+            foreground: "#FFF0F2",
+            card: "#2A1C24",
+            cardForeground: "#FFF0F2",
+
+            primary: "#F05270",
+            primaryForeground: "#FFFFFF",
+            secondary: "#452832",
+            secondaryForeground: "#FFDCE4",
+
+            muted: "#241A20",
+            mutedForeground: "#C4A6B0",
+
+            accent: "#D99A68",
+            accentForeground: "#211711",
+
+            destructive: "#FF5364",
             destructiveForeground: "#FFFFFF",
-            border: "#44403C",
-            ring: "#B91C1C",
-            sidebar: "#1C1917",
-            sidebarForeground: "#F5F5F4",
-            sidebarPrimary: "#B91C1C",
-            sidebarPrimaryForeground: "#FAF7F5",
-            sidebarAccent: "#B45309",
-            sidebarAccentForeground: "#FEF3C7",
-            sidebarBorder: "#44403C"
+
+            border: "#51313F",
+            ring: "#F05270",
+
+            sidebar: "#120D12",
+            sidebarForeground: "#FFF0F2",
+            sidebarPrimary: "#F05270",
+            sidebarPrimaryForeground: "#FFFFFF",
+            sidebarAccent: "#34212D",
+            sidebarAccentForeground: "#F5B6C5",
+            sidebarBorder: "#392630"
         },
+
+        // 02. VIOLET LIGHT
         {
             name: "Violet Light",
             dark: false,
-            radius: 8,
-            background: "#F5F5FF",
-            foreground: "#2A2A4A",
+            radius: 12,
+
+            background: "#F3F0FA",
+            foreground: "#27213D",
             card: "#FFFFFF",
-            cardForeground: "#2A2A4A",
-            primary: "#6E56CF",
+            cardForeground: "#27213D",
+
+            primary: "#7655D9",
             primaryForeground: "#FFFFFF",
-            secondary: "#E4DFFF",
-            secondaryForeground: "#4A4080",
-            muted: "#F0F0FA",
-            mutedForeground: "#6C6C8A",
-            accent: "#D8E6FF",
-            accentForeground: "#2A2A4A",
-            destructive: "#FF5470",
+            secondary: "#E6DDF8",
+            secondaryForeground: "#513B91",
+
+            muted: "#EBE7F4",
+            mutedForeground: "#77708D",
+
+            accent: "#C5B5F5",
+            accentForeground: "#30204E",
+
+            destructive: "#D94368",
             destructiveForeground: "#FFFFFF",
-            border: "#E0E0F0",
-            ring: "#6E56CF",
-            sidebar: "#F0F0FA",
-            sidebarForeground: "#2A2A4A",
-            sidebarPrimary: "#6E56CF",
+
+            border: "#DDD5EC",
+            ring: "#8768E8",
+
+            sidebar: "#EAE5F5",
+            sidebarForeground: "#27213D",
+            sidebarPrimary: "#7655D9",
             sidebarPrimaryForeground: "#FFFFFF",
-            sidebarAccent: "#D8E6FF",
-            sidebarAccentForeground: "#2A2A4A",
-            sidebarBorder: "#E0E0F0"
+            sidebarAccent: "#DCD3F1",
+            sidebarAccentForeground: "#513B91",
+            sidebarBorder: "#D8CFE9"
         },
+
+        // 03. VIOLET DARK
         {
             name: "Violet Dark",
             dark: true,
-            radius: 8,
-            background: "#0F0F1A",
-            foreground: "#E2E2F5",
-            card: "#1A1A2E",
-            cardForeground: "#E2E2F5",
-            primary: "#A48FFF",
-            primaryForeground: "#0F0F1A",
-            secondary: "#2D2B55",
-            secondaryForeground: "#C4C2FF",
-            muted: "#222244",
-            mutedForeground: "#A0A0C0",
-            accent: "#303060",
-            accentForeground: "#E2E2F5",
-            destructive: "#FF5470",
+            radius: 12,
+
+            background: "#141020",
+            foreground: "#F3EEFF",
+            card: "#211A33",
+            cardForeground: "#F3EEFF",
+
+            primary: "#B58AFF",
+            primaryForeground: "#20152F",
+            secondary: "#35274D",
+            secondaryForeground: "#E7D8FF",
+
+            muted: "#261F38",
+            mutedForeground: "#B5A9CF",
+
+            accent: "#7557AD",
+            accentForeground: "#FFFFFF",
+
+            destructive: "#FF6385",
             destructiveForeground: "#FFFFFF",
-            border: "#303052",
-            ring: "#A48FFF",
-            sidebar: "#1A1A2E",
-            sidebarForeground: "#E2E2F5",
-            sidebarPrimary: "#A48FFF",
-            sidebarPrimaryForeground: "#0F0F1A",
-            sidebarAccent: "#303060",
-            sidebarAccentForeground: "#E2E2F5",
-            sidebarBorder: "#303052"
+
+            border: "#443458",
+            ring: "#BD91FF",
+
+            sidebar: "#100C1A",
+            sidebarForeground: "#F3EEFF",
+            sidebarPrimary: "#B58AFF",
+            sidebarPrimaryForeground: "#20152F",
+            sidebarAccent: "#302441",
+            sidebarAccentForeground: "#DCC8FF",
+            sidebarBorder: "#382B4B"
         },
+
+        // 04. NEON LIGHT
         {
             name: "Neon Light",
             dark: false,
-            radius: 8,
-            background: "#F8F9FA",
-            foreground: "#0C0C1D",
+            radius: 10,
+
+            background: "#F3F6FC",
+            foreground: "#17182D",
             card: "#FFFFFF",
-            cardForeground: "#0C0C1D",
-            primary: "#FF00C8",
+            cardForeground: "#17182D",
+
+            primary: "#D600A9",
             primaryForeground: "#FFFFFF",
-            secondary: "#F0F0FF",
-            secondaryForeground: "#0C0C1D",
-            muted: "#F0F0FF",
-            mutedForeground: "#0C0C1D",
-            accent: "#00FFCC",
-            accentForeground: "#0C0C1D",
-            destructive: "#FF3D00",
+            secondary: "#E8E9F7",
+            secondaryForeground: "#39365E",
+
+            muted: "#E9EDF5",
+            mutedForeground: "#626B86",
+
+            accent: "#00BFA5",
+            accentForeground: "#062D29",
+
+            destructive: "#E83C50",
             destructiveForeground: "#FFFFFF",
-            border: "#DFE6E9",
-            ring: "#FF00C8",
-            sidebar: "#F0F0FF",
-            sidebarForeground: "#0C0C1D",
-            sidebarPrimary: "#FF00C8",
+
+            border: "#D6DCEB",
+            ring: "#E000B0",
+
+            sidebar: "#E8ECF7",
+            sidebarForeground: "#17182D",
+            sidebarPrimary: "#D600A9",
             sidebarPrimaryForeground: "#FFFFFF",
-            sidebarAccent: "#00FFCC",
-            sidebarAccentForeground: "#0C0C1D",
-            sidebarBorder: "#DFE6E9"
+            sidebarAccent: "#D1F5EC",
+            sidebarAccentForeground: "#087968",
+            sidebarBorder: "#D4DCEC"
         },
+
+        // 05. NEON DARK
         {
             name: "Neon Dark",
             dark: true,
-            radius: 8,
-            background: "#0C0C1D",
-            foreground: "#ECEFF4",
-            card: "#1E1E3F",
-            cardForeground: "#ECEFF4",
-            primary: "#FF00C8",
-            primaryForeground: "#FFFFFF",
-            secondary: "#1E1E3F",
-            secondaryForeground: "#ECEFF4",
-            muted: "#151530",
-            mutedForeground: "#8085A6",
-            accent: "#00FFCC",
-            accentForeground: "#0C0C1D",
-            destructive: "#FF3D00",
+            radius: 10,
+
+            background: "#090D20",
+            foreground: "#F0F3FF",
+            card: "#171E38",
+            cardForeground: "#F0F3FF",
+
+            primary: "#FF3DBB",
+            primaryForeground: "#220B25",
+            secondary: "#252E50",
+            secondaryForeground: "#E0E8FF",
+
+            muted: "#151B32",
+            mutedForeground: "#A0AACB",
+
+            accent: "#35F5D0",
+            accentForeground: "#06251F",
+
+            destructive: "#FF5265",
             destructiveForeground: "#FFFFFF",
-            border: "#2E2E5E",
-            ring: "#FF00C8",
-            sidebar: "#0C0C1D",
-            sidebarForeground: "#ECEFF4",
-            sidebarPrimary: "#FF00C8",
-            sidebarPrimaryForeground: "#FFFFFF",
-            sidebarAccent: "#00FFCC",
-            sidebarAccentForeground: "#0C0C1D",
-            sidebarBorder: "#2E2E5E"
+
+            border: "#344264",
+            ring: "#FF3DBB",
+
+            sidebar: "#070A18",
+            sidebarForeground: "#F0F3FF",
+            sidebarPrimary: "#FF3DBB",
+            sidebarPrimaryForeground: "#220B25",
+            sidebarAccent: "#153B43",
+            sidebarAccentForeground: "#55F5D9",
+            sidebarBorder: "#293451"
         },
+
+        // 06. SUNSET LIGHT
         {
             name: "Sunset Light",
             dark: false,
-            radius: 10,
-            background: "#FFF9F5",
-            foreground: "#3D3436",
+            radius: 12,
+
+            background: "#FFF7ED",
+            foreground: "#392A28",
             card: "#FFFFFF",
-            cardForeground: "#3D3436",
-            primary: "#FF7E5F",
+            cardForeground: "#392A28",
+
+            primary: "#E66B4E",
             primaryForeground: "#FFFFFF",
-            secondary: "#FFEDEA",
-            secondaryForeground: "#B35340",
-            muted: "#FFF0EB",
-            mutedForeground: "#78716C",
-            accent: "#FEB47B",
-            accentForeground: "#3D3436",
-            destructive: "#E63946",
+            secondary: "#F9E4D9",
+            secondaryForeground: "#934A3B",
+
+            muted: "#F5EAE1",
+            mutedForeground: "#88736A",
+
+            accent: "#E8A85F",
+            accentForeground: "#382519",
+
+            destructive: "#D93E4D",
             destructiveForeground: "#FFFFFF",
-            border: "#FFE0D6",
-            ring: "#FF7E5F",
-            sidebar: "#FFF0EB",
-            sidebarForeground: "#3D3436",
-            sidebarPrimary: "#FF7E5F",
+
+            border: "#EED9C9",
+            ring: "#E66B4E",
+
+            sidebar: "#F6EBDD",
+            sidebarForeground: "#392A28",
+            sidebarPrimary: "#E66B4E",
             sidebarPrimaryForeground: "#FFFFFF",
-            sidebarAccent: "#FEB47B",
-            sidebarAccentForeground: "#3D3436",
-            sidebarBorder: "#FFE0D6"
+            sidebarAccent: "#F1D8BD",
+            sidebarAccentForeground: "#86502F",
+            sidebarBorder: "#E9D5C5"
         },
+
+        // 07. SUNSET DARK
         {
             name: "Sunset Dark",
             dark: true,
-            radius: 10,
-            background: "#2A2024",
-            foreground: "#F2E9E4",
-            card: "#392F35",
-            cardForeground: "#F2E9E4",
-            primary: "#FF7E5F",
-            primaryForeground: "#FFFFFF",
-            secondary: "#463A41",
-            secondaryForeground: "#F2E9E4",
-            muted: "#30272C",
-            mutedForeground: "#D7C6BC",
-            accent: "#FEB47B",
-            accentForeground: "#2A2024",
-            destructive: "#E63946",
-            destructiveForeground: "#FFFFFF",
-            border: "#463A41",
-            ring: "#FF7E5F",
-            sidebar: "#2A2024",
-            sidebarForeground: "#F2E9E4",
-            sidebarPrimary: "#FF7E5F",
-            sidebarPrimaryForeground: "#FFFFFF",
-            sidebarAccent: "#FEB47B",
-            sidebarAccentForeground: "#2A2024",
-            sidebarBorder: "#463A41"
-        }
-    ]
+            radius: 12,
 
+            background: "#1C1420",
+            foreground: "#FFF0E8",
+            card: "#30212D",
+            cardForeground: "#FFF0E8",
+
+            primary: "#FF806B",
+            primaryForeground: "#28141B",
+            secondary: "#49303C",
+            secondaryForeground: "#FFE0D5",
+
+            muted: "#29202B",
+            mutedForeground: "#C6A9A8",
+
+            accent: "#FFC078",
+            accentForeground: "#352116",
+
+            destructive: "#F05262",
+            destructiveForeground: "#FFFFFF",
+
+            border: "#533B49",
+            ring: "#FF806B",
+
+            sidebar: "#150F19",
+            sidebarForeground: "#FFF0E8",
+            sidebarPrimary: "#FF806B",
+            sidebarPrimaryForeground: "#28141B",
+            sidebarAccent: "#3C2934",
+            sidebarAccentForeground: "#FFC078",
+            sidebarBorder: "#44303E"
+        }
+
+    ]
     readonly property var theme: themes[themeIndex]
 
     // ── Active theme values (use these in the UI) ───────────
