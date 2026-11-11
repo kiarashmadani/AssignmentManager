@@ -1,2 +1,134 @@
 /build/*
 /.qtcreator/*
+# =========================
+# Qt & C++ Build Artifacts
+# =========================
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.so.*
+*.dll
+*.dylib
+*.exe
+*.obj
+*.lib
+*.exp
+*.ilk
+*.pdb
+
+# Qt generated files
+object_script.*.Release
+object_script.*.Debug
+*_plugin_import.cpp
+/.qmake.cache
+/.qmake.stash
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qm
+*.prl
+target_wrapper.*
+
+# =========================
+# QML Caches
+# =========================
+*.qmlc
+*.jsc
+*_qmlcache.qrc
+*.qmlls.ini
+
+# =========================
+# Desktop Build Directories
+# =========================
+build/
+*build-*/
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake-install/
+Makefile
+*.cmake
+install_manifest.txt
+compile_commands.json
+
+# =========================
+# Qt Creator & Qt Design Studio
+# =========================
+# User-specific project settings and sessions
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.qmlproject.*
+*.qmlproject.user
+*.qmlproject.user.*
+CMakeLists.txt.user*
+*creator.user*
+*.autosave
+*.creator.user.*
+
+# Qt Design Studio specific state and auto-backups
+*.qml.autosave
+.qmlproject.state
+.qt-design-studio/
+.qds/
+qds_project.json.user
+
+# =========================
+# IDEs & Editors (General)
+# =========================
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.vcxproj
+*.vcxproj.*
+*.sln
+
+# JetBrains CLion
+.idea/
+
+# =========================
+# Android Build Files & Outputs
+# =========================
+# Gradle
+.gradle/
+local.properties
+.netrc
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Android build outputs for Qt
+android/build/
+android/libs/
+android/obj/
+android/bin/
+*.apk
+*.aab
+
+# Keystores & Signing Keys
+*.jks
+*.keystore
+
+# =========================
+# OS Generated Files
+# =========================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# Linux
+*~
+.directory
