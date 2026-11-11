@@ -2,7 +2,6 @@ import QtQuick
 import QtCore
 
 Window {
-    Component.onCompleted: Constants.themeIndex = appSettings.themeIndex
     width: Constants.width
     height: Constants.height
 
@@ -12,10 +11,16 @@ Window {
     visible: true
     title: "Assignment Manager"
 
+    // On startup: apply the saved theme and language
+    Component.onCompleted: {
+        Constants.themeIndex = appSettings.themeIndex
+        Qt.uiLanguage = appSettings.languageCode
+    }
 
     Settings {
         id: appSettings
         property int themeIndex: 0
+        property string languageCode: "en"
     }
 
     MainScreen {
@@ -25,7 +30,7 @@ Window {
 
     Connections {
         target: mainScreen.pages
-        function onCurrentIndexChanged () {
+        function onCurrentIndexChanged() {
             mainScreen.navBar.currentIndex = mainScreen.pages.currentIndex
         }
     }
@@ -34,6 +39,13 @@ Window {
         function onClicked(button) {
             Constants.themeIndex = button.themeIndex
             appSettings.themeIndex = button.themeIndex
+        }
+    }
+    Connections {
+        target: mainScreen.settingsPage.languageGroup
+        function onClicked(button) {
+            Qt.uiLanguage = button.languageCode
+            appSettings.languageCode = button.languageCode
         }
     }
 }

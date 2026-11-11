@@ -38,6 +38,7 @@ Rectangle {
                 border.color: doneBox.checked ? Constants.primary : Constants.mutedForeground
 
                 Text {
+                    font.family: Constants.fontFamily
                     anchors.centerIn: parent
                     text: ""
                     visible: doneBox.checked
@@ -54,6 +55,7 @@ Rectangle {
             spacing: Constants.spacing / 2
 
             Text {
+                font.family: Constants.fontFamily
                 id: cardTitle
                 Layout.fillWidth: true
                 text: assignmentCard.title
@@ -63,6 +65,7 @@ Rectangle {
                 color: Constants.cardForeground
             }
             Text {
+                font.family: Constants.fontFamily
                 id: cardDescription
                 Layout.fillWidth: true
                 text: assignmentCard.descriptions
@@ -137,6 +140,7 @@ Rectangle {
                     }
 
                     Text {
+                        font.family: Constants.fontFamily
                         id: cardDeadline
                         anchors.centerIn: parent
                         text: qsTr("Due to ") + assignmentCard.deadlineHours + ":" + assignmentCard.deadlineMinutes + ", " + assignmentCard.day
@@ -209,6 +213,7 @@ Rectangle {
                     }
 
                     Text {
+                        font.family: Constants.fontFamily
                         id: cardCoursename
                         anchors.centerIn: parent
                         text: assignmentCard.course

@@ -26,11 +26,19 @@ QtObject {
     readonly property color shadowColor: "#000000"
     readonly property real shadowOpacity: isDark ? 0.5 : 0.18
 
+    readonly property FontLoader persianFont: FontLoader {
+            source: "fonts/Vazirmatn-Regular.ttf"
+    }
+
+    readonly property string fontFamily: Qt.uiLanguage === "fa"
+                        ? persianFont.name
+                        : Qt.application.font.family
+
     readonly property var themes: [
 
         // 01. CRIMSON DARK
         {
-            name: "Crimson Dark",
+            name: qsTr("Crimson Dark"),
             dark: true,
             radius: 10,
 
@@ -67,7 +75,7 @@ QtObject {
 
         // 02. VIOLET LIGHT
         {
-            name: "Violet Light",
+            name: qsTr("Violet Light"),
             dark: false,
             radius: 12,
 
@@ -104,7 +112,7 @@ QtObject {
 
         // 03. VIOLET DARK
         {
-            name: "Violet Dark",
+            name: qsTr("Violet Dark"),
             dark: true,
             radius: 12,
 
@@ -141,7 +149,7 @@ QtObject {
 
         // 04. NEON LIGHT
         {
-            name: "Neon Light",
+            name: qsTr("Neon Light"),
             dark: false,
             radius: 10,
 
@@ -178,7 +186,7 @@ QtObject {
 
         // 05. NEON DARK
         {
-            name: "Neon Dark",
+            name: qsTr("Neon Dark"),
             dark: true,
             radius: 10,
 
@@ -215,7 +223,7 @@ QtObject {
 
         // 06. SUNSET LIGHT
         {
-            name: "Sunset Light",
+            name: qsTr("Sunset Light"),
             dark: false,
             radius: 12,
 
@@ -252,7 +260,7 @@ QtObject {
 
         // 07. SUNSET DARK
         {
-            name: "Sunset Dark",
+            name: qsTr("Sunset Dark"),
             dark: true,
             radius: 12,
 

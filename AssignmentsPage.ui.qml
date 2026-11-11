@@ -112,6 +112,7 @@ Item {
             // EDIT 3: Moved assignmentText INSIDE topBlurStrip after MultiEffect
             // so the text always sits directly on top of the blur strip
             Text {
+                font.family: Constants.fontFamily
                 id: assignmentText
                 anchors.top: parent.top
                 anchors.left: parent.left

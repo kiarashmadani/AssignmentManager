@@ -8,6 +8,7 @@ Item {
     width: Constants.width
     height: Constants.height
     property alias themeGroup: themeGroup
+    property alias languageGroup: languageGroup
 
     Rectangle {
         id: page
@@ -26,6 +27,7 @@ Item {
                 spacing: Constants.spacing
 
                 Text {
+                    font.family: Constants.fontFamily
                     id: appearanceText
                     text: qsTr("Appearance")
                     color: Constants.foreground
@@ -52,6 +54,29 @@ Item {
                     ThemeButton {themeIndex:3; Layout.fillWidth: true; ButtonGroup.group: themeGroup  }
                     ThemeButton {themeIndex:4; Layout.fillWidth: true; ButtonGroup.group: themeGroup  }
                     ThemeButton {themeIndex:5; Layout.fillWidth: true; ButtonGroup.group: themeGroup  }
+                }
+
+                Text {
+                    font.family: Constants.fontFamily
+                    id: languageText
+                    text: qsTr("Language")
+                    color: Constants.foreground
+                    font.pixelSize: Constants.bodySize
+                    Layout.fillWidth: true
+                }
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 1
+                    color: Constants.border
+                }
+
+                ButtonGroup { id: languageGroup }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Constants.spacing
+                    LanguageButton { languageIndex: 0; Layout.fillWidth: true; ButtonGroup.group: languageGroup }
+                    LanguageButton { languageIndex: 1; Layout.fillWidth: true; ButtonGroup.group: languageGroup }
                 }
 
                 Item { Layout.fillHeight: true }
@@ -110,6 +135,7 @@ Item {
             }
 
             Text {
+                font.family: Constants.fontFamily
                 id: settingsText
                 anchors.top: parent.top
                 anchors.left: parent.left

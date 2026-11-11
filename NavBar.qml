@@ -493,6 +493,7 @@ Item {
 
                 // Subtle etched glass drop-shadow behind unselected labels for legibility over detailed backgrounds
                 Text {
+                    font.family: Constants.fontFamily
                     anchors.centerIn: parent
                     anchors.verticalCenterOffset: 0.8
                     text: parent.modelData
@@ -506,6 +507,7 @@ Item {
                 }
 
                 Text {
+                    font.family: Constants.fontFamily
                     anchors.centerIn: parent
                     text: parent.modelData
                     color: Constants.foreground
@@ -551,6 +553,7 @@ Item {
 
                         // Subtle depth shadow behind active lens text
                         Text {
+                            font.family: Constants.fontFamily
                             anchors.centerIn: parent
                             anchors.verticalCenterOffset: 1.0
                             text: parent.modelData
@@ -564,6 +567,7 @@ Item {
                         }
 
                         Text {
+                            font.family: Constants.fontFamily
                             anchors.centerIn: parent
                             text: parent.modelData
                             color: Constants.primaryForeground

@@ -4,6 +4,9 @@
         <file>AssignmentManager.qmlproject</file>
         <file>AssignmentsPage.ui.qml</file>
         <file>Constants.qml</file>
+        <file>i18n/qml_en.ts</file>
+        <file>i18n/qml_fa.ts</file>
+        <file>LanguageButton.ui.qml</file>
         <file>Main.qml</file>
         <file>MainScreen.ui.qml</file>
         <file>NavBar.qml</file>

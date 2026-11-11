@@ -108,6 +108,7 @@ Button {
 
     contentItem: Item {
         Text {
+            font.family: Constants.fontFamily
             anchors.centerIn: parent
             text: themeButton.theme.name
             horizontalAlignment: Text.AlignHCenter

@@ -4,7 +4,17 @@ project(AssignmentManager VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick LinguistTools)
+
+qt_standard_project_setup(REQUIRES 6.8
+    I18N_SOURCE_LANGUAGE en
+    I18N_TRANSLATED_LANGUAGES fa)
+
+qt_add_translations(appAssignmentManager
+    RESOURCE_PREFIX /qt/qml/AssignmentManager/i18n
+    TS_FILE_BASE qml
+    TS_FILE_DIR i18n
+)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
@@ -26,6 +36,9 @@ qt_add_qml_module(appAssignmentManager
         SettingsPage.ui.qml
         AssignmentCard.ui.qml
         ThemeButton.ui.qml
+        LanguageButton.ui.qml
+    RESOURCES
+        fonts/Vazirmatn-Regular.ttf
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
