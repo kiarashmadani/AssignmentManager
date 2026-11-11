@@ -34,6 +34,8 @@ QtObject {
                         ? persianFont.name
                         : Qt.application.font.family
 
+    readonly property color scrim: "#B3000000"   // dark veil behind sheets (70% black)
+
     readonly property var themes: [
 
         // 01. CRIMSON DARK

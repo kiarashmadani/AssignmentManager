@@ -1,7 +1,11 @@
 import QtQuick
 import QtCore
+import QtQuick.Controls.Basic
 
 Window {
+    property alias addSheet: addSheet
+    property alias addPage: addPage
+
     width: Constants.width
     height: Constants.height
 
@@ -47,5 +51,42 @@ Window {
             Qt.uiLanguage = button.languageCode
             appSettings.languageCode = button.languageCode
         }
+    }
+
+    Drawer {
+        id: addSheet
+        edge: Qt.BottomEdge
+        width: mainScreen.width
+        height: mainScreen.height * 0.92
+        modal: true
+        interactive: true
+
+        background: Rectangle {
+            color: Constants.background
+            topLeftRadius: 24
+            topRightRadius: 24
+            bottomLeftRadius: 0
+            bottomRightRadius: 0
+            border.width: 1
+            border.color: Constants.border
+        }
+
+        Overlay.modal: Rectangle {
+            color: Constants.scrim
+        }
+
+        AddAssignmentPage {
+            id: addPage
+            anchors.fill: parent
+        }
+    }
+
+    Connections {
+        target: mainScreen.addButton
+        function onClicked() { addSheet.open() }
+    }
+    Connections {
+        target: addPage.cancelButton
+        function onClicked() { addSheet.close() }
     }
 }

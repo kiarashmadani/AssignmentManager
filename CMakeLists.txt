@@ -37,6 +37,9 @@ qt_add_qml_module(appAssignmentManager
         AssignmentCard.ui.qml
         ThemeButton.ui.qml
         LanguageButton.ui.qml
+        AddAssignmentPage.ui.qml
+        GlassButton.ui.qml
+        GlassTextField.ui.qml
     RESOURCES
         fonts/Vazirmatn-Regular.ttf
 )

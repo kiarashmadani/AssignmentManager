@@ -1,9 +1,14 @@
 <RCC>
     <qresource>
+        <file>AddAssignmentPage.ui.qml</file>
         <file>AssignmentCard.ui.qml</file>
         <file>AssignmentManager.qmlproject</file>
         <file>AssignmentsPage.ui.qml</file>
         <file>Constants.qml</file>
+        <file>GlassButton.ui.qml</file>
+        <file>GlassDatePicker.ui.qml</file>
+        <file>GlassTextField.ui.qml</file>
+        <file>GlassTimePicker.ui.qml</file>
         <file>i18n/qml_en.ts</file>
         <file>i18n/qml_fa.ts</file>
         <file>LanguageButton.ui.qml</file>
@@ -12,5 +17,6 @@
         <file>NavBar.qml</file>
         <file>SettingsPage.ui.qml</file>
         <file>ThemeButton.ui.qml</file>
+        <file>TimeWheel.ui.qml</file>
     </qresource>
 </RCC>
