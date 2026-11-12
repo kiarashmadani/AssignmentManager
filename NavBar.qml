@@ -290,7 +290,7 @@ Item {
         property real velocity: 0.0
 
         FrameAnimation {
-            running: true
+            running: bar.dragging || Math.abs(lens.velocity) > 0.01
             onTriggered: {
                 if (frameTime > 0) {
                     const instVel = (lens.center - lens.prevCenter) / (frameTime * 60.0)

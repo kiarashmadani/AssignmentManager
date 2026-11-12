@@ -300,34 +300,60 @@ QtObject {
     ]
     readonly property var theme: themes[themeIndex]
 
+    // ── Theme transition duration (ms) ────────────────────────
+    readonly property int themeTransition: 360
+
     // ── Active theme values (use these in the UI) ───────────
     readonly property string themeName: theme.name
     readonly property bool isDark: theme.dark
     readonly property int radius: theme.radius
 
-    readonly property color background: theme.background
-    readonly property color foreground: theme.foreground
-    readonly property color card: theme.card
-    readonly property color cardForeground: theme.cardForeground
-    readonly property color primary: theme.primary
-    readonly property color primaryForeground: theme.primaryForeground
-    readonly property color secondary: theme.secondary
-    readonly property color secondaryForeground: theme.secondaryForeground
-    readonly property color muted: theme.muted
-    readonly property color mutedForeground: theme.mutedForeground
-    readonly property color accent: theme.accent
-    readonly property color accentForeground: theme.accentForeground
-    readonly property color destructive: theme.destructive
-    readonly property color destructiveForeground: theme.destructiveForeground
-    readonly property color border: theme.border
-    readonly property color ring: theme.ring
-    readonly property color sidebar: theme.sidebar
-    readonly property color sidebarForeground: theme.sidebarForeground
-    readonly property color sidebarPrimary: theme.sidebarPrimary
-    readonly property color sidebarPrimaryForeground: theme.sidebarPrimaryForeground
-    readonly property color sidebarAccent: theme.sidebarAccent
-    readonly property color sidebarAccentForeground: theme.sidebarAccentForeground
-    readonly property color sidebarBorder: theme.sidebarBorder
+    property color background: theme.background
+    Behavior on background { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color foreground: theme.foreground
+    Behavior on foreground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color card: theme.card
+    Behavior on card { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color cardForeground: theme.cardForeground
+    Behavior on cardForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color primary: theme.primary
+    Behavior on primary { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color primaryForeground: theme.primaryForeground
+    Behavior on primaryForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color secondary: theme.secondary
+    Behavior on secondary { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color secondaryForeground: theme.secondaryForeground
+    Behavior on secondaryForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color muted: theme.muted
+    Behavior on muted { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color mutedForeground: theme.mutedForeground
+    Behavior on mutedForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color accent: theme.accent
+    Behavior on accent { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color accentForeground: theme.accentForeground
+    Behavior on accentForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color destructive: theme.destructive
+    Behavior on destructive { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color destructiveForeground: theme.destructiveForeground
+    Behavior on destructiveForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color border: theme.border
+    Behavior on border { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color ring: theme.ring
+    Behavior on ring { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color sidebar: theme.sidebar
+    Behavior on sidebar { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color sidebarForeground: theme.sidebarForeground
+    Behavior on sidebarForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color sidebarPrimary: theme.sidebarPrimary
+    Behavior on sidebarPrimary { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color sidebarPrimaryForeground: theme.sidebarPrimaryForeground
+    Behavior on sidebarPrimaryForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color sidebarAccent: theme.sidebarAccent
+    Behavior on sidebarAccent { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color sidebarAccentForeground: theme.sidebarAccentForeground
+    Behavior on sidebarAccentForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color sidebarBorder: theme.sidebarBorder
+    Behavior on sidebarBorder { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
 
     // ── Old names, so existing files keep working ───────────
     readonly property color windowColor: background

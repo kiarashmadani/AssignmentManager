@@ -40,6 +40,9 @@ qt_add_qml_module(appAssignmentManager
         AddAssignmentPage.ui.qml
         GlassButton.ui.qml
         GlassTextField.ui.qml
+        GlassDatePicker.ui.qml
+        GlassTimePicker.ui.qml
+        TimeWheel.ui.qml
     RESOURCES
         fonts/Vazirmatn-Regular.ttf
 )

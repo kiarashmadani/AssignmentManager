@@ -34,7 +34,13 @@ Item {
             width: 58
             height: 58
             padding: 0
-            visible: navBar.currentIndex === 0
+            // Smoothly fade instead of snapping visible on/off
+            opacity: navBar.currentIndex === 0 ? 1.0 : 0.0
+            visible: opacity > 0
+            enabled: navBar.currentIndex === 0
+            Behavior on opacity {
+                NumberAnimation { duration: 220; easing.type: Easing.InOutQuad }
+            }
             hoverEnabled: true
             anchors.right: parent.right
             anchors.bottom: navBar.top

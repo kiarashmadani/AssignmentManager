@@ -18,6 +18,18 @@ Rectangle {
     border.width: 1
     border.color: Constants.border
 
+    // ── Entrance animation: fade-in + slide-up when delegate is created ──
+    opacity: 0
+    transform: Translate { id: cardSlide; y: 18 }
+    Component.onCompleted: {
+        cardEntrance.start()
+    }
+    ParallelAnimation {
+        id: cardEntrance
+        NumberAnimation { target: assignmentCard; property: "opacity"; to: 1.0; duration: 300; easing.type: Easing.OutCubic }
+        NumberAnimation { target: cardSlide; property: "y"; to: 0; duration: 300; easing.type: Easing.OutCubic }
+    }
+
     RowLayout {
         id: row
         anchors.fill: parent
@@ -37,6 +49,13 @@ Rectangle {
                 border.width: 2
                 border.color: doneBox.checked ? Constants.primary : Constants.mutedForeground
 
+                Behavior on color { ColorAnimation { duration: 200 } }
+                Behavior on border.color { ColorAnimation { duration: 200 } }
+
+                // Scale-pop on toggle
+                scale: 1.0
+                Behavior on scale { SpringAnimation { spring: 6; damping: 0.4 } }
+
                 Text {
                     font.family: Constants.fontFamily
                     anchors.centerIn: parent
@@ -45,6 +64,11 @@ Rectangle {
                     color: Constants.primaryForeground
                     font.pixelSize: 14
                     font.bold: true
+                    // Checkmark pops in with a spring
+                    scale: doneBox.checked ? 1.0 : 0.0
+                    opacity: doneBox.checked ? 1.0 : 0.0
+                    Behavior on scale { SpringAnimation { spring: 8; damping: 0.35 } }
+                    Behavior on opacity { NumberAnimation { duration: 150 } }
                 }
             }
         }
@@ -63,6 +87,8 @@ Rectangle {
                 font.pixelSize: Constants.bodySize + 2
                 font.weight: Font.DemiBold
                 color: Constants.cardForeground
+                opacity: doneBox.checked ? 0.45 : 1.0
+                Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.InOutQuad } }
             }
             Text {
                 font.family: Constants.fontFamily
@@ -72,6 +98,8 @@ Rectangle {
                 wrapMode: Text.WordWrap
                 font.pixelSize: Constants.bodySize - 2
                 color: Constants.mutedForeground
+                opacity: doneBox.checked ? 0.40 : 1.0
+                Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.InOutQuad } }
             }
             RowLayout {
                 Layout.fillWidth: true

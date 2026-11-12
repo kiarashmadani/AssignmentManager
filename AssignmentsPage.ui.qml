@@ -30,6 +30,24 @@ Item {
                 topMargin: Constants.padding + assignmentText.implicitHeight + Constants.spacing
                 bottomMargin: 90          // last card can scroll above the nav bar
 
+                // Smooth momentum scrolling
+                flickDeceleration: 1800
+                maximumFlickVelocity: 3500
+                boundsBehavior: Flickable.DragAndOvershootBounds
+                boundsMovement: Flickable.FollowBoundsBehavior
+
+                // Animate items shifting when one is added or removed
+                displaced: Transition {
+                    NumberAnimation { properties: "y"; duration: 250; easing.type: Easing.OutCubic }
+                }
+                add: Transition {
+                    NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 280; easing.type: Easing.OutCubic }
+                    NumberAnimation { property: "scale"; from: 0.92; to: 1.0; duration: 280; easing.type: Easing.OutCubic }
+                }
+                remove: Transition {
+                    NumberAnimation { property: "opacity"; from: 1; to: 0; duration: 220; easing.type: Easing.InCubic }
+                }
+
                 model: ListModel {
                     ListElement { title: "Signals and Systems"; descriptions: "Provide solutions for the problems shared in LMS" }
                     ListElement { title: "Linear Algebra"; descriptions: "Exercises 3.1 to 3.4, hand in as a single PDF" }
