@@ -10,6 +10,9 @@ Item {
     property string deadlineMinutes: "00"
     property string course: "Course"
     property string day: "Saturday"
+    property string priority: "Normal"
+    property color courseColor: Constants.accent
+    property bool isUrgent: false
     property alias doneBox: doneBox
 
     implicitHeight: row.implicitHeight + 28
@@ -65,7 +68,9 @@ Item {
 
         // Clean hairline perimeter border
         border.width: 1
-        border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.14) : Qt.rgba(0, 0, 0, 0.08)
+        border.color: cardHover.hovered
+            ? Qt.rgba(1, 1, 1, 0.22)
+            : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.14) : Qt.rgba(0, 0, 0, 0.08))
 
         HoverHandler { id: cardHover }
         TapHandler { id: cardTap }
@@ -142,17 +147,42 @@ Item {
                 Layout.fillWidth: true
                 spacing: 6
 
-                Text {
-                    id: cardTitle
+                RowLayout {
                     Layout.fillWidth: true
-                    text: assignmentCard.title
-                    wrapMode: Text.WordWrap
-                    font.family: Constants.fontFamily
-                    font.pixelSize: Constants.bodySize + 1
-                    font.weight: Font.DemiBold
-                    color: Constants.cardForeground
-                    opacity: doneBox.checked ? 0.40 : 1.0
-                    Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
+                    spacing: 8
+
+                    Text {
+                        id: cardTitle
+                        Layout.fillWidth: true
+                        text: assignmentCard.title
+                        wrapMode: Text.WordWrap
+                        font.family: Constants.fontFamily
+                        font.pixelSize: Constants.bodySize + 1
+                        font.weight: Font.DemiBold
+                        color: Constants.cardForeground
+                        opacity: doneBox.checked ? 0.40 : 1.0
+                        Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
+                    }
+
+                    // Priority micro badge if High or Medium
+                    Rectangle {
+                        visible: assignmentCard.priority === "High" || assignmentCard.priority === "Urgent"
+                        implicitWidth: priorityText.implicitWidth + 12
+                        implicitHeight: 20
+                        radius: 10
+                        color: Qt.rgba(1, 0.25, 0.35, 0.18)
+                        border.width: 1
+                        border.color: Qt.rgba(1, 0.25, 0.35, 0.35)
+
+                        Text {
+                            id: priorityText
+                            anchors.centerIn: parent
+                            text: "\uD83D\uDD25 High"
+                            font.pixelSize: 10
+                            font.bold: true
+                            color: Constants.destructive
+                        }
+                    }
                 }
 
                 Text {
@@ -181,9 +211,13 @@ Item {
                         implicitWidth: deadlineRow.implicitWidth + 20
                         implicitHeight: 26
                         radius: 13
-                        color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.04)
+                        color: assignmentCard.isUrgent
+                            ? Qt.rgba(1, 0.3, 0.2, 0.14)
+                            : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.04))
                         border.width: 1
-                        border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.06)
+                        border.color: assignmentCard.isUrgent
+                            ? Qt.rgba(1, 0.3, 0.2, 0.32)
+                            : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.06))
 
                         RowLayout {
                             id: deadlineRow
@@ -191,15 +225,15 @@ Item {
                             spacing: 5
 
                             Text {
-                                text: "\u23F1"  // Stopwatch / clock icon
+                                text: assignmentCard.isUrgent ? "\u26A0\uFE0F" : "\u23F1"
                                 font.pixelSize: 11
-                                color: Constants.primary
+                                color: assignmentCard.isUrgent ? Constants.destructive : Constants.primary
                             }
 
                             Text {
                                 font.family: Constants.fontFamily
                                 text: qsTr("Due ") + assignmentCard.day + " " + assignmentCard.deadlineHours + ":" + assignmentCard.deadlineMinutes
-                                color: Constants.foreground
+                                color: assignmentCard.isUrgent ? Constants.destructive : Constants.foreground
                                 font.pixelSize: Constants.captionSize - 1
                                 font.weight: Font.Medium
                             }
@@ -225,7 +259,7 @@ Item {
                                 width: 7
                                 height: 7
                                 radius: 3.5
-                                color: Constants.accent
+                                color: assignmentCard.courseColor
                             }
 
                             Text {

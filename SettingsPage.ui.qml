@@ -20,69 +20,184 @@ Item {
             anchors.fill: parent
             color: Constants.background
 
-            ColumnLayout {
+            Flickable {
                 anchors.fill: parent
-                anchors.margins: Constants.padding
-                anchors.topMargin: Constants.padding + settingsText.implicitHeight + Constants.spacing
-                spacing: Constants.spacing
+                anchors.leftMargin: Constants.padding
+                anchors.rightMargin: Constants.padding
+                topMargin: topBlurStrip.height + 8
+                bottomMargin: 96
+                contentWidth: width
+                contentHeight: settingsLayout.implicitHeight + 20
+                clip: true
+                boundsBehavior: Flickable.DragAndOvershootBounds
 
-                Text {
-                    font.family: Constants.fontFamily
-                    id: appearanceText
-                    text: qsTr("Appearance")
-                    color: Constants.foreground
-                    font.pixelSize: Constants.bodySize
-                    Layout.fillWidth: true
+                ColumnLayout {
+                    id: settingsLayout
+                    width: parent.width
+                    spacing: 18
+
+                    // ── Scholar Profile Liquid Glass Card ──
+                    Rectangle {
+                        Layout.fillWidth: true
+                        implicitHeight: profileRow.implicitHeight + 28
+                        radius: 20
+
+                        gradient: Gradient {
+                            GradientStop {
+                                position: 0.0
+                                color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(1, 1, 1, 0.92)
+                            }
+                            GradientStop {
+                                position: 1.0
+                                color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(1, 1, 1, 0.80)
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: parent.radius
+                            color: Constants.card
+                            opacity: Constants.isDark ? 0.45 : 0.25
+                        }
+
+                        border.width: 1
+                        border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.15) : Qt.rgba(0, 0, 0, 0.08)
+
+                        RowLayout {
+                            id: profileRow
+                            anchors.fill: parent
+                            anchors.margins: 16
+                            spacing: 14
+
+                            // Student Avatar Orb
+                            Rectangle {
+                                width: 54
+                                height: 54
+                                radius: 27
+                                color: Constants.primary
+                                opacity: 0.88
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "\uD83C\uDF93" // Graduation cap
+                                    font.pixelSize: 24
+                                }
+                            }
+
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 3
+
+                                Text {
+                                    text: qsTr("Academic Scholar")
+                                    color: Constants.foreground
+                                    font.pixelSize: Constants.titleSize - 4
+                                    font.bold: true
+                                    font.family: Constants.fontFamily
+                                }
+
+                                Text {
+                                    text: qsTr("Assignment Manager Pro • Level 4")
+                                    color: Constants.mutedForeground
+                                    font.pixelSize: Constants.captionSize
+                                    font.family: Constants.fontFamily
+                                }
+                            }
+                        }
+                    }
+
+                    // ── SECTION 1: Appearance & Themes ──
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 8
+
+                        Text {
+                            font.family: Constants.fontFamily
+                            text: qsTr("APPEARANCE & THEMES")
+                            color: Constants.mutedForeground
+                            font.pixelSize: Constants.captionSize - 1
+                            font.weight: Font.DemiBold
+                            Layout.leftMargin: 6
+                        }
+
+                        ButtonGroup { id: themeGroup }
+
+                        GridLayout {
+                            columns: 3
+                            rowSpacing: Constants.spacing
+                            columnSpacing: Constants.spacing
+                            Layout.fillWidth: true
+
+                            ThemeButton { themeIndex: 0; Layout.fillWidth: true; ButtonGroup.group: themeGroup }
+                            ThemeButton { themeIndex: 1; Layout.fillWidth: true; ButtonGroup.group: themeGroup }
+                            ThemeButton { themeIndex: 2; Layout.fillWidth: true; ButtonGroup.group: themeGroup }
+                            ThemeButton { themeIndex: 3; Layout.fillWidth: true; ButtonGroup.group: themeGroup }
+                            ThemeButton { themeIndex: 4; Layout.fillWidth: true; ButtonGroup.group: themeGroup }
+                            ThemeButton { themeIndex: 5; Layout.fillWidth: true; ButtonGroup.group: themeGroup }
+                            ThemeButton { themeIndex: 6; Layout.fillWidth: true; ButtonGroup.group: themeGroup }
+                        }
+                    }
+
+                    // ── SECTION 2: Language & Region ──
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 8
+
+                        Text {
+                            font.family: Constants.fontFamily
+                            text: qsTr("LANGUAGE & REGION")
+                            color: Constants.mutedForeground
+                            font.pixelSize: Constants.captionSize - 1
+                            font.weight: Font.DemiBold
+                            Layout.leftMargin: 6
+                        }
+
+                        ButtonGroup { id: languageGroup }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: Constants.spacing
+                            LanguageButton { languageIndex: 0; Layout.fillWidth: true; ButtonGroup.group: languageGroup }
+                            LanguageButton { languageIndex: 1; Layout.fillWidth: true; ButtonGroup.group: languageGroup }
+                        }
+                    }
+
+                    // ── SECTION 3: App Info & Version ──
+                    Rectangle {
+                        Layout.fillWidth: true
+                        implicitHeight: 48
+                        radius: 14
+                        color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(0, 0, 0, 0.03)
+                        border.width: 1
+                        border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.05)
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.leftMargin: 16
+                            anchors.rightMargin: 16
+                            Text {
+                                text: qsTr("Assignment Manager Liquid Glass Edition")
+                                color: Constants.mutedForeground
+                                font.pixelSize: Constants.captionSize - 1
+                                font.family: Constants.fontFamily
+                            }
+                            Item { Layout.fillWidth: true }
+                            Text {
+                                text: "v2.0"
+                                color: Constants.primary
+                                font.pixelSize: Constants.captionSize - 1
+                                font.bold: true
+                                font.family: Constants.fontFamily
+                            }
+                        }
+                    }
+
+                    Item { implicitHeight: 12 }
                 }
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 1
-                    color: Constants.border
-                }
-
-                GridLayout {
-                    columns: 3
-                    rowSpacing: Constants.spacing
-                    columnSpacing: Constants.spacing
-                    Layout.fillWidth: true
-
-                    ButtonGroup { id: themeGroup }
-
-                    ThemeButton {themeIndex:0; Layout.fillWidth: true; ButtonGroup.group: themeGroup }
-                    ThemeButton {themeIndex:1; Layout.fillWidth: true; ButtonGroup.group: themeGroup }
-                    ThemeButton {themeIndex:2; Layout.fillWidth: true; ButtonGroup.group: themeGroup  }
-                    ThemeButton {themeIndex:3; Layout.fillWidth: true; ButtonGroup.group: themeGroup  }
-                    ThemeButton {themeIndex:4; Layout.fillWidth: true; ButtonGroup.group: themeGroup  }
-                    ThemeButton {themeIndex:5; Layout.fillWidth: true; ButtonGroup.group: themeGroup  }
-                }
-
-                Text {
-                    font.family: Constants.fontFamily
-                    id: languageText
-                    text: qsTr("Language")
-                    color: Constants.foreground
-                    font.pixelSize: Constants.bodySize
-                    Layout.fillWidth: true
-                }
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 1
-                    color: Constants.border
-                }
-
-                ButtonGroup { id: languageGroup }
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: Constants.spacing
-                    LanguageButton { languageIndex: 0; Layout.fillWidth: true; ButtonGroup.group: languageGroup }
-                    LanguageButton { languageIndex: 1; Layout.fillWidth: true; ButtonGroup.group: languageGroup }
-                }
-
-                Item { Layout.fillHeight: true }
             }
         }
 
+        // Top progressive blur strip with Settings title
         Item {
             id: topBlurStrip
             z: 10
