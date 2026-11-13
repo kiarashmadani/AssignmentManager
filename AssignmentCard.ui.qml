@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls.Basic
 
-Rectangle {
+Item {
     id: assignmentCard
     property string title: "Assignment"
     property string descriptions: "Descriptions"
@@ -12,246 +12,234 @@ Rectangle {
     property string day: "Saturday"
     property alias doneBox: doneBox
 
-    implicitHeight: row.implicitHeight + 2 * Constants.padding
-    color: Constants.card
-    radius: Constants.radius
-    border.width: 1
-    border.color: Constants.border
+    implicitHeight: row.implicitHeight + 28
+    implicitWidth: 360
 
-    // ── Entrance animation: fade-in + slide-up when delegate is created ──
+    // ── Entrance animation: smooth fade-in + fluid slide-up ──
     opacity: 0
-    transform: Translate { id: cardSlide; y: 18 }
+    transform: Translate { id: cardSlide; y: 20 }
     Component.onCompleted: {
         cardEntrance.start()
     }
     ParallelAnimation {
         id: cardEntrance
-        NumberAnimation { target: assignmentCard; property: "opacity"; to: 1.0; duration: 300; easing.type: Easing.OutCubic }
-        NumberAnimation { target: cardSlide; property: "y"; to: 0; duration: 300; easing.type: Easing.OutCubic }
+        NumberAnimation { target: assignmentCard; property: "opacity"; to: 1.0; duration: 320; easing.type: Easing.OutCubic }
+        NumberAnimation { target: cardSlide; property: "y"; to: 0; duration: 320; easing.type: Easing.OutCubic }
     }
 
-    RowLayout {
-        id: row
+    // ── Main Glass Card Surface ──
+    Rectangle {
+        id: cardSurface
         anchors.fill: parent
-        anchors.margins: Constants.padding
-        spacing: Constants.spacing
+        radius: 18
 
-        CheckBox {
-            id: doneBox
-            Layout.alignment: Qt.AlignTop
-            padding: 0
+        // Tactile liquid spring physics on hover and press
+        scale: cardTap.pressed ? 0.982 : (cardHover.hovered ? 1.012 : 1.0)
+        Behavior on scale {
+            SpringAnimation { spring: 5.5; damping: 0.38; mass: 0.7 }
+        }
 
-            indicator: Rectangle {
-                implicitWidth: 24
-                implicitHeight: 24
-                radius: width / 2
-                color: doneBox.checked ? Constants.primary : "transparent"
-                border.width: 2
-                border.color: doneBox.checked ? Constants.primary : Constants.mutedForeground
-
-                Behavior on color { ColorAnimation { duration: 200 } }
-                Behavior on border.color { ColorAnimation { duration: 200 } }
-
-                // Scale-pop on toggle
-                scale: 1.0
-                Behavior on scale { SpringAnimation { spring: 6; damping: 0.4 } }
-
-                Text {
-                    font.family: Constants.fontFamily
-                    anchors.centerIn: parent
-                    text: ""
-                    visible: doneBox.checked
-                    color: Constants.primaryForeground
-                    font.pixelSize: 14
-                    font.bold: true
-                    // Checkmark pops in with a spring
-                    scale: doneBox.checked ? 1.0 : 0.0
-                    opacity: doneBox.checked ? 1.0 : 0.0
-                    Behavior on scale { SpringAnimation { spring: 8; damping: 0.35 } }
-                    Behavior on opacity { NumberAnimation { duration: 150 } }
-                }
+        // Translucent Frosted Glass Substrate (Apple visionOS / iOS 18 style)
+        gradient: Gradient {
+            GradientStop {
+                position: 0.0
+                color: Constants.isDark
+                       ? Qt.rgba(1, 1, 1, cardTap.pressed ? 0.14 : (cardHover.hovered ? 0.12 : 0.08))
+                       : Qt.rgba(1, 1, 1, cardTap.pressed ? 0.96 : (cardHover.hovered ? 0.92 : 0.85))
+            }
+            GradientStop {
+                position: 1.0
+                color: Constants.isDark
+                       ? Qt.rgba(1, 1, 1, cardTap.pressed ? 0.08 : (cardHover.hovered ? 0.06 : 0.04))
+                       : Qt.rgba(1, 1, 1, cardTap.pressed ? 0.88 : (cardHover.hovered ? 0.84 : 0.75))
             }
         }
 
-        ColumnLayout {
-            id: content
-            Layout.fillWidth: true
-            spacing: Constants.spacing / 2
+        // Tint underlay with theme card tone
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
+            color: Constants.card
+            opacity: Constants.isDark ? 0.50 : 0.30
+        }
 
-            Text {
-                font.family: Constants.fontFamily
-                id: cardTitle
-                Layout.fillWidth: true
-                text: assignmentCard.title
-                wrapMode: Text.WordWrap
-                font.pixelSize: Constants.bodySize + 2
-                font.weight: Font.DemiBold
-                color: Constants.cardForeground
-                opacity: doneBox.checked ? 0.45 : 1.0
-                Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.InOutQuad } }
-            }
-            Text {
-                font.family: Constants.fontFamily
-                id: cardDescription
-                Layout.fillWidth: true
-                text: assignmentCard.descriptions
-                wrapMode: Text.WordWrap
-                font.pixelSize: Constants.bodySize - 2
-                color: Constants.mutedForeground
-                opacity: doneBox.checked ? 0.40 : 1.0
-                Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.InOutQuad } }
-            }
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Constants.spacing
+        // Clean hairline perimeter border
+        border.width: 1
+        border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.14) : Qt.rgba(0, 0, 0, 0.08)
 
-                // ── 1. Deadline Liquid Glass Sticker ──
-                Item {
-                    implicitWidth: cardDeadline.implicitWidth + 2 * Constants.padding
-                    implicitHeight: cardDeadline.implicitHeight + Constants.spacing + 4
+        HoverHandler { id: cardHover }
+        TapHandler { id: cardTap }
 
-                    // Translucent liquid gel base
+        // ── Card Content ──
+        RowLayout {
+            id: row
+            anchors.fill: parent
+            anchors.leftMargin: 18
+            anchors.rightMargin: 18
+            anchors.topMargin: 14
+            anchors.bottomMargin: 14
+            spacing: 14
+
+            // ── Apple Reminders-Style Circular Checkbox ──
+            CheckBox {
+                id: doneBox
+                Layout.alignment: Qt.AlignTop
+                Layout.topMargin: 2
+                padding: 0
+
+                indicator: Item {
+                    implicitWidth: 26
+                    implicitHeight: 26
+
+                    // Glowing halo when checked
                     Rectangle {
                         anchors.fill: parent
-                        radius: height / 2
-                        color: Constants.secondary
-                        opacity: Constants.isDark ? 0.50 : 0.65
+                        anchors.margins: -2
+                        radius: width / 2
+                        color: Constants.primary
+                        opacity: doneBox.checked ? 0.35 : 0.0
+                        scale: doneBox.checked ? 1.15 : 0.8
+                        Behavior on opacity { NumberAnimation { duration: 200 } }
+                        Behavior on scale { SpringAnimation { spring: 6; damping: 0.4 } }
                     }
 
-                    // 3D cylindrical glass volume sheen
+                    // Circular ring / fill body
                     Rectangle {
+                        id: checkCircle
                         anchors.fill: parent
-                        radius: height / 2
-                        opacity: 0.80
-                        gradient: Gradient {
-                            GradientStop { position: 0.00; color: Constants.glassEdge }
-                            GradientStop { position: 0.28; color: Constants.glassShine }
-                            GradientStop { position: 0.55; color: "transparent" }
-                            GradientStop { position: 1.00; color: Constants.glassShine }
+                        radius: width / 2
+                        color: doneBox.checked ? Constants.primary : "transparent"
+                        border.width: doneBox.checked ? 0 : 1.8
+                        border.color: doneBox.checked ? Constants.primary : Constants.mutedForeground
+
+                        Behavior on color { ColorAnimation { duration: 200 } }
+                        Behavior on border.color { ColorAnimation { duration: 200 } }
+
+                        // Tactile spring scale bounce on toggle
+                        scale: doneBox.down ? 0.85 : 1.0
+                        Behavior on scale { SpringAnimation { spring: 7; damping: 0.35 } }
+
+                        // Crisp vector checkmark symbol
+                        Text {
+                            anchors.centerIn: parent
+                            anchors.verticalCenterOffset: -0.5
+                            text: "\u2713"
+                            color: Constants.primaryForeground
+                            font.pixelSize: 15
+                            font.bold: true
+                            scale: doneBox.checked ? 1.0 : 0.0
+                            opacity: doneBox.checked ? 1.0 : 0.0
+                            Behavior on scale { SpringAnimation { spring: 7.5; damping: 0.35 } }
+                            Behavior on opacity { NumberAnimation { duration: 150 } }
                         }
-                    }
-
-                    // Concentric curved inner top/bottom reflection
-                    Rectangle {
-                        anchors.fill: parent
-                        anchors.margins: 2
-                        radius: height / 2
-                        opacity: 0.55
-                        gradient: Gradient {
-                            GradientStop { position: 0.00; color: Constants.glassEdge }
-                            GradientStop { position: 0.30; color: Constants.glassShine }
-                            GradientStop { position: 0.55; color: "transparent" }
-                            GradientStop { position: 0.82; color: "transparent" }
-                            GradientStop { position: 1.00; color: Constants.glassShine }
-                        }
-                    }
-
-                    // Outer specular glass rim
-                    Rectangle {
-                        anchors.fill: parent
-                        radius: height / 2
-                        color: "transparent"
-                        border.width: 1
-                        border.color: Constants.glassEdge
-                        opacity: 0.85
-                    }
-
-                    // Inner refractive ring
-                    Rectangle {
-                        anchors.fill: parent
-                        anchors.margins: 1.2
-                        radius: height / 2
-                        color: "transparent"
-                        border.width: 0.7
-                        border.color: Constants.glassShine
-                        opacity: 0.65
-                    }
-
-                    Text {
-                        font.family: Constants.fontFamily
-                        id: cardDeadline
-                        anchors.centerIn: parent
-                        text: qsTr("Due to ") + assignmentCard.deadlineHours + ":" + assignmentCard.deadlineMinutes + ", " + assignmentCard.day
-                        color: Constants.foreground
-                        font.pixelSize: Constants.bodySize - 4
-                        font.weight: Font.Medium
                     }
                 }
+            }
 
-                // ── 2. Course Name Liquid Glass Sticker ──
-                Item {
-                    implicitWidth: cardCoursename.implicitWidth + 2 * Constants.padding
-                    implicitHeight: cardCoursename.implicitHeight + Constants.spacing + 4
+            // ── Task Details ──
+            ColumnLayout {
+                id: content
+                Layout.fillWidth: true
+                spacing: 6
 
-                    // Translucent liquid gel base
-                    Rectangle {
-                        anchors.fill: parent
-                        radius: height / 2
-                        color: Constants.accent
-                        opacity: Constants.isDark ? 0.55 : 0.70
-                    }
-
-                    // 3D cylindrical glass volume sheen
-                    Rectangle {
-                        anchors.fill: parent
-                        radius: height / 2
-                        opacity: 0.80
-                        gradient: Gradient {
-                            GradientStop { position: 0.00; color: Constants.glassEdge }
-                            GradientStop { position: 0.28; color: Constants.glassShine }
-                            GradientStop { position: 0.55; color: "transparent" }
-                            GradientStop { position: 1.00; color: Constants.glassShine }
-                        }
-                    }
-
-                    // Concentric curved inner top/bottom reflection
-                    Rectangle {
-                        anchors.fill: parent
-                        anchors.margins: 2
-                        radius: height / 2
-                        opacity: 0.55
-                        gradient: Gradient {
-                            GradientStop { position: 0.00; color: Constants.glassEdge }
-                            GradientStop { position: 0.30; color: Constants.glassShine }
-                            GradientStop { position: 0.55; color: "transparent" }
-                            GradientStop { position: 0.82; color: "transparent" }
-                            GradientStop { position: 1.00; color: Constants.glassShine }
-                        }
-                    }
-
-                    // Outer specular glass rim
-                    Rectangle {
-                        anchors.fill: parent
-                        radius: height / 2
-                        color: "transparent"
-                        border.width: 1
-                        border.color: Constants.glassEdge
-                        opacity: 0.85
-                    }
-
-                    // Inner refractive ring
-                    Rectangle {
-                        anchors.fill: parent
-                        anchors.margins: 1.2
-                        radius: height / 2
-                        color: "transparent"
-                        border.width: 0.7
-                        border.color: Constants.glassShine
-                        opacity: 0.65
-                    }
-
-                    Text {
-                        font.family: Constants.fontFamily
-                        id: cardCoursename
-                        anchors.centerIn: parent
-                        text: assignmentCard.course
-                        color: Constants.foreground
-                        font.pixelSize: Constants.bodySize - 4
-                        font.weight: Font.DemiBold
-                    }
+                Text {
+                    id: cardTitle
+                    Layout.fillWidth: true
+                    text: assignmentCard.title
+                    wrapMode: Text.WordWrap
+                    font.family: Constants.fontFamily
+                    font.pixelSize: Constants.bodySize + 1
+                    font.weight: Font.DemiBold
+                    color: Constants.cardForeground
+                    opacity: doneBox.checked ? 0.40 : 1.0
+                    Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
                 }
 
-                Item { Layout.fillWidth: true }     // keeps the stickers on the left
+                Text {
+                    id: cardDescription
+                    Layout.fillWidth: true
+                    text: assignmentCard.descriptions
+                    wrapMode: Text.WordWrap
+                    elide: Text.ElideRight
+                    maximumLineCount: 2
+                    font.family: Constants.fontFamily
+                    font.pixelSize: Constants.captionSize + 1
+                    lineHeight: 1.18
+                    color: Constants.mutedForeground
+                    opacity: doneBox.checked ? 0.35 : 0.88
+                    Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
+                }
+
+                // ── Apple-Style Translucent Capsule Badges ──
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.topMargin: 4
+                    spacing: 8
+
+                    // 1. Deadline Capsule Chip
+                    Rectangle {
+                        implicitWidth: deadlineRow.implicitWidth + 20
+                        implicitHeight: 26
+                        radius: 13
+                        color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.04)
+                        border.width: 1
+                        border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.06)
+
+                        RowLayout {
+                            id: deadlineRow
+                            anchors.centerIn: parent
+                            spacing: 5
+
+                            Text {
+                                text: "\u23F1"  // Stopwatch / clock icon
+                                font.pixelSize: 11
+                                color: Constants.primary
+                            }
+
+                            Text {
+                                font.family: Constants.fontFamily
+                                text: qsTr("Due ") + assignmentCard.day + " " + assignmentCard.deadlineHours + ":" + assignmentCard.deadlineMinutes
+                                color: Constants.foreground
+                                font.pixelSize: Constants.captionSize - 1
+                                font.weight: Font.Medium
+                            }
+                        }
+                    }
+
+                    // 2. Course Capsule Chip with Apple Calendar-style Category Dot
+                    Rectangle {
+                        implicitWidth: courseRow.implicitWidth + 20
+                        implicitHeight: 26
+                        radius: 13
+                        color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.04)
+                        border.width: 1
+                        border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.06)
+
+                        RowLayout {
+                            id: courseRow
+                            anchors.centerIn: parent
+                            spacing: 6
+
+                            // Category Indicator Dot
+                            Rectangle {
+                                width: 7
+                                height: 7
+                                radius: 3.5
+                                color: Constants.accent
+                            }
+
+                            Text {
+                                font.family: Constants.fontFamily
+                                text: assignmentCard.course
+                                color: Constants.foreground
+                                font.pixelSize: Constants.captionSize - 1
+                                font.weight: Font.DemiBold
+                            }
+                        }
+                    }
+
+                    Item { Layout.fillWidth: true }
+                }
             }
         }
     }

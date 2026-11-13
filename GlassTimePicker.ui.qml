@@ -5,83 +5,68 @@ Item {
     property alias hourWheel: hourWheel
     property alias minuteWheel: minuteWheel
 
-    implicitWidth: timeRow.implicitWidth + Constants.padding
-    implicitHeight: timeRow.implicitHeight
+    implicitWidth: timeRow.implicitWidth + 24
+    implicitHeight: 148
 
-    // 1. Frosted base
+    // 1. Frosted Glass Housing
     Rectangle {
         anchors.fill: parent
-        radius: Constants.radius
-        color: Constants.card
-        opacity: Constants.isDark ? 0.45 : 0.6
-    }
-
-    // 2. Glass shine from the top edge
-    Rectangle {
-        anchors.fill: parent
-        radius: Constants.radius
-        opacity: 0.6
+        radius: 16
         gradient: Gradient {
-            GradientStop { position: 0.0; color: Constants.glassShine }
-            GradientStop { position: 0.5; color: "transparent" }
+            GradientStop {
+                position: 0.0
+                color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.09) : Qt.rgba(1, 1, 1, 0.88)
+            }
+            GradientStop {
+                position: 1.0
+                color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.05) : Qt.rgba(1, 1, 1, 0.78)
+            }
         }
+
+        Rectangle {
+            anchors.fill: parent
+            radius: 16
+            color: Constants.card
+            opacity: Constants.isDark ? 0.35 : 0.20
+        }
+
+        // Perimeter hairline
+        border.width: 1
+        border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.07)
     }
 
-    // 3. Glass lens behind the selected row
-    Item {
+    // 2. Apple Frosted Selection Capsule (Center Active Lens)
+    Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 6
-        height: 40
-
-        Rectangle {                         // tinted gel
-            anchors.fill: parent
-            radius: height / 2
-            color: Constants.primary
-            opacity: 0.35
-        }
-        Rectangle {                         // shine on the lens
-            anchors.fill: parent
-            radius: height / 2
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: Constants.glassEdge }
-                GradientStop { position: 0.45; color: "transparent" }
-                GradientStop { position: 1.0; color: Constants.glassShine }
-            }
-            opacity: 0.7
-        }
-        Rectangle {                         // lens rim
-            anchors.fill: parent
-            radius: height / 2
-            color: "transparent"
-            border.width: 1
-            border.color: Constants.glassEdge
-        }
-    }
-
-    // 4. Outer rim
-    Rectangle {
-        anchors.fill: parent
-        radius: Constants.radius
-        color: "transparent"
+        anchors.margins: 8
+        height: 38
+        radius: 10
+        color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.10) : Qt.rgba(0, 0, 0, 0.05)
         border.width: 1
-        border.color: Constants.glassEdge
+        border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.18) : Qt.rgba(0, 0, 0, 0.08)
     }
 
-    // 5. The wheels
+    // 3. Wheels & Colon Delimiter
     Row {
         id: timeRow
         anchors.centerIn: parent
+        spacing: 6
 
-        TimeWheel { id: hourWheel; model: 24; currentIndex: 23 }
+        TimeWheel { id: hourWheel; model: 24; currentIndex: 23; implicitWidth: 46 }
+
         Text {
             anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: -1
             text: ":"
             color: Constants.foreground
             font.pixelSize: Constants.bodySize + 6
-            font.bold: true
+            font.family: Constants.fontFamily
+            font.weight: Font.Bold
+            opacity: 0.75
         }
-        TimeWheel { id: minuteWheel; model: 60; currentIndex: 59 }
+
+        TimeWheel { id: minuteWheel; model: 60; currentIndex: 59; implicitWidth: 46 }
     }
 }

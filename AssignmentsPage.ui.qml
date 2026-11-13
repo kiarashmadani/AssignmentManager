@@ -25,7 +25,7 @@ Item {
                 anchors.leftMargin: Constants.padding
                 anchors.rightMargin: Constants.padding
                 clip: true
-                spacing: Constants.spacing
+                spacing: 12
                 // Starts the first card below the floating title, while allowing cards to scroll up behind it
                 topMargin: Constants.padding + assignmentText.implicitHeight + Constants.spacing
                 bottomMargin: 90          // last card can scroll above the nav bar

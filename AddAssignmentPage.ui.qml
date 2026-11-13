@@ -7,103 +7,242 @@ Item {
     width: Constants.width
     height: Constants.height
 
-    // what Main.qml can reach from outside
+    // Public aliases for Main.qml wiring
     property alias cancelButton: cancelButton
     property alias saveButton: saveButton
 
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: Constants.padding
-        spacing: Constants.spacing
+    // ── Drag Handle (Pinned at Top) ──
+    Rectangle {
+        id: sheetHandle
+        anchors.top: parent.top
+        anchors.topMargin: 10
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 38
+        height: 5
+        radius: 2.5
+        color: Constants.mutedForeground
+        opacity: 0.35
+        z: 10
+    }
 
-        Text {
-            id: setAssignmentText
-            Layout.fillWidth: true
-            text: qsTr("New assignment")
-            color: Constants.foreground
-            font.pixelSize: Constants.titleSize
-            font.family: Constants.fontFamily
-            font.bold: true
-        }
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 1
-            color: Constants.border
-        }
+    // ── Scrollable Sheet Body ──
+    Flickable {
+        id: scrollArea
+        anchors.top: sheetHandle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: bottomActionBar.top
+        anchors.topMargin: 12
+        anchors.bottomMargin: 8
+        contentWidth: width
+        contentHeight: formContent.implicitHeight + 20
+        clip: true
+        boundsBehavior: Flickable.DragAndOvershootBounds
 
-        Text {
-            id: assignmentNameText
-            Layout.fillWidth: true
-            text: qsTr("Assignment Name")
-            color: Constants.foreground
-            font.pixelSize: Constants.bodySize
-            font.family: Constants.fontFamily
-        }
-        GlassTextField { id: nameField; Layout.fillWidth: true; placeholderText: qsTr("Page 31 and 32") }
+        ColumnLayout {
+            id: formContent
+            width: parent.width - Constants.padding * 2
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 16
 
-        Text {
-            id: courseNameText
-            Layout.fillWidth: true
-            text: qsTr("Course name")
-            color: Constants.foreground
-            font.pixelSize: Constants.bodySize
-            font.family: Constants.fontFamily
-        }
-        GlassTextField { id: courseField; Layout.fillWidth: true; placeholderText: qsTr("Signals and Systems") }
+            // ── Header Title ──
+            Text {
+                text: qsTr("New Assignment")
+                color: Constants.foreground
+                font.pixelSize: Constants.titleSize + 4
+                font.family: Constants.fontFamily
+                font.weight: Font.Bold
+                Layout.topMargin: 4
+                Layout.bottomMargin: 2
+            }
 
-        Text {
-            Layout.fillWidth: true
-            text: qsTr("Deadline")
-            color: Constants.foreground
-            font.pixelSize: Constants.bodySize
-            font.family: Constants.fontFamily
-        }
+            // ── GROUP 1: Details & Notes (iOS Inset Grouped Card) ──
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 6
 
-        RowLayout {
-            Layout.alignment: Qt.AlignHCenter
-            spacing: Constants.spacing
-            GlassDatePicker { id: datePicker }
-            GlassTimePicker { id: timePicker }
-        }
+                Text {
+                    text: qsTr("TASK INFO")
+                    color: Constants.mutedForeground
+                    font.pixelSize: Constants.captionSize - 1
+                    font.family: Constants.fontFamily
+                    font.weight: Font.DemiBold
+                    Layout.leftMargin: 6
+                }
 
-        Text {
-            id: descriptionText
-            Layout.fillWidth: true
-            text: qsTr("Description")
-            color: Constants.foreground
-            font.pixelSize: Constants.bodySize
-            font.family: Constants.fontFamily
-        }
-        TextArea {
-            id: descriptionArea
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            placeholderText: qsTr("What do you have to do?")
-            wrapMode: TextArea.Wrap
-            padding: Constants.padding
-            color: Constants.foreground
-            placeholderTextColor: Constants.mutedForeground
-            selectionColor: Constants.primary
-            selectedTextColor: Constants.primaryForeground
-            font.pixelSize: Constants.bodySize
-            font.family: Constants.fontFamily
+                Rectangle {
+                    Layout.fillWidth: true
+                    implicitHeight: detailsColumn.implicitHeight
+                    radius: 16
+                    color: Constants.card
+                    opacity: 0.88
+                    border.width: 1
+                    border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.08)
 
-            background: Rectangle {
-                radius: Constants.radius
-                color: Constants.card
-                opacity: descriptionArea.activeFocus ? 0.85 : (Constants.isDark ? 0.45 : 0.6)
-                border.width: descriptionArea.activeFocus ? 2 : 1
-                border.color: descriptionArea.activeFocus ? Constants.ring : Constants.glassEdge
+                    ColumnLayout {
+                        id: detailsColumn
+                        anchors.fill: parent
+                        spacing: 0
+
+                        // Title Field
+                        TextField {
+                            id: nameField
+                            Layout.fillWidth: true
+                            implicitHeight: 50
+                            leftPadding: 16
+                            rightPadding: 16
+                            placeholderText: qsTr("Assignment Title")
+                            color: Constants.foreground
+                            placeholderTextColor: Constants.mutedForeground
+                            font.pixelSize: Constants.bodySize
+                            font.family: Constants.fontFamily
+                            font.weight: Font.Medium
+                            background: null
+                        }
+
+                        // Hairline Divider
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.leftMargin: 16
+                            Layout.rightMargin: 16
+                            implicitHeight: 1
+                            color: Constants.border
+                            opacity: 0.60
+                        }
+
+                        // Description / Notes Field
+                        TextArea {
+                            id: descriptionArea
+                            Layout.fillWidth: true
+                            implicitHeight: 80
+                            leftPadding: 16
+                            rightPadding: 16
+                            topPadding: 12
+                            bottomPadding: 12
+                            placeholderText: qsTr("Notes or instructions...")
+                            wrapMode: TextArea.Wrap
+                            color: Constants.foreground
+                            placeholderTextColor: Constants.mutedForeground
+                            font.pixelSize: Constants.bodySize - 1
+                            font.family: Constants.fontFamily
+                            background: null
+                        }
+                    }
+                }
+            }
+
+            // ── GROUP 2: Course / Subject Tag ──
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 6
+
+                Text {
+                    text: qsTr("COURSE / SUBJECT")
+                    color: Constants.mutedForeground
+                    font.pixelSize: Constants.captionSize - 1
+                    font.family: Constants.fontFamily
+                    font.weight: Font.DemiBold
+                    Layout.leftMargin: 6
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    implicitHeight: 52
+                    radius: 16
+                    color: Constants.card
+                    opacity: 0.88
+                    border.width: 1
+                    border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.08)
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.leftMargin: 16
+                        anchors.rightMargin: 16
+                        spacing: 10
+
+                        Text {
+                            text: "\uD83D\uDCDA"  // Book emoji / icon
+                            font.pixelSize: 16
+                        }
+
+                        TextField {
+                            id: courseField
+                            Layout.fillWidth: true
+                            placeholderText: qsTr("e.g. Signals and Systems")
+                            color: Constants.foreground
+                            placeholderTextColor: Constants.mutedForeground
+                            font.pixelSize: Constants.bodySize
+                            font.family: Constants.fontFamily
+                            background: null
+                        }
+                    }
+                }
+            }
+
+            // ── GROUP 3: Deadline & Time ──
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 6
+
+                Text {
+                    text: qsTr("DEADLINE & TIME")
+                    color: Constants.mutedForeground
+                    font.pixelSize: Constants.captionSize - 1
+                    font.family: Constants.fontFamily
+                    font.weight: Font.DemiBold
+                    Layout.leftMargin: 6
+                }
+
+                RowLayout {
+                    Layout.alignment: Qt.AlignHCenter
+                    spacing: 14
+
+                    GlassDatePicker { id: datePicker }
+                    GlassTimePicker { id: timePicker }
+                }
             }
         }
+    }
+
+    // ── Bottom Action Bar (Apple Docked Liquid Glass Bar) ──
+    Rectangle {
+        id: bottomActionBar
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 76
+        color: Constants.background
+        opacity: 0.95
+
+        // Top hairline separator
+        Rectangle {
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 1
+            color: Constants.border
+            opacity: 0.50
+        }
 
         RowLayout {
-            id: rowLayout
-            Layout.fillWidth: true
-            spacing: Constants.spacing
+            anchors.fill: parent
+            anchors.leftMargin: Constants.padding
+            anchors.rightMargin: Constants.padding
+            spacing: 12
 
-            GlassButton { id: cancelButton; Layout.fillWidth: true; text: qsTr("Cancel") }
-            GlassButton { id: saveButton; Layout.fillWidth: true; text: qsTr("Save"); primary: true }
+            GlassButton {
+                id: cancelButton
+                Layout.fillWidth: true
+                text: qsTr("Cancel")
+                primary: false
+            }
+
+            GlassButton {
+                id: saveButton
+                Layout.fillWidth: true
+                text: qsTr("Save")
+                primary: true
+            }
         }
     }
 }

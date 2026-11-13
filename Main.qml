@@ -72,8 +72,8 @@ Window {
 
         background: Rectangle {
             color: Constants.background
-            topLeftRadius: 24
-            topRightRadius: 24
+            topLeftRadius: 28
+            topRightRadius: 28
             bottomLeftRadius: 0
             bottomRightRadius: 0
             border.width: 1

@@ -7,71 +7,82 @@ Button {
     // false = secondary action (Cancel): see-through glass
     property bool primary: false
 
-    implicitHeight: 48
+    implicitHeight: 52
     implicitWidth: 120
 
-    scale: glassButton.down ? 0.95 : 1.0
+    // Tactile liquid spring on press and hover (Apple fluid physics)
+    scale: glassButton.down ? 0.95 : (glassButton.hovered ? 1.025 : 1.0)
     Behavior on scale {
         SpringAnimation {
-            spring: 5
-            damping: 0.4
+            spring: 5.5
+            damping: 0.38
+            mass: 0.75
         }
     }
 
+    hoverEnabled: true
+
     background: Item {
+        id: bgRoot
+        readonly property real pillRadius: Math.min(width, height) / 2
+
+        // Translucent Glass Body
         Rectangle {
-            // 1. body
             anchors.fill: parent
-            radius: height / 2
-            color: glassButton.primary ? Constants.primary : Constants.card
-            opacity: glassButton.primary ? (glassButton.down ? 0.75 : 0.9) : (glassButton.down ? 0.7 : (Constants.isDark ? 0.4 : 0.55))
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: 150
-                }
+            radius: bgRoot.pillRadius
+            gradient: glassButton.primary ? primaryGrad : glassGrad
+
+            Gradient {
+                id: primaryGrad
+                GradientStop { position: 0.0; color: Qt.lighter(Constants.primary, 1.10) }
+                GradientStop { position: 1.0; color: Qt.darker(Constants.primary, 1.05) }
             }
-        }
-        Rectangle {
-            // 2. glass shine
-            anchors.fill: parent
-            radius: height / 2
-            opacity: glassButton.primary ? 0.8 : 0.6
-            gradient: Gradient {
+
+            Gradient {
+                id: glassGrad
                 GradientStop {
                     position: 0.0
-                    color: Constants.glassEdge
-                }
-                GradientStop {
-                    position: 0.3
-                    color: Constants.glassShine
-                }
-                GradientStop {
-                    position: 0.6
-                    color: "transparent"
+                    color: Constants.isDark
+                           ? Qt.rgba(1, 1, 1, glassButton.down ? 0.16 : 0.10)
+                           : Qt.rgba(1, 1, 1, glassButton.down ? 0.95 : 0.85)
                 }
                 GradientStop {
                     position: 1.0
-                    color: Constants.glassShine
+                    color: Constants.isDark
+                           ? Qt.rgba(1, 1, 1, glassButton.down ? 0.08 : 0.05)
+                           : Qt.rgba(1, 1, 1, glassButton.down ? 0.80 : 0.70)
                 }
             }
-        }
-        Rectangle {
-            // 3. rim
-            anchors.fill: parent
-            radius: height / 2
-            color: "transparent"
+
+            opacity: glassButton.down ? 0.88 : 1.0
+            Behavior on opacity { NumberAnimation { duration: 150 } }
+
+            // Clean Hairline Perimeter Border
             border.width: 1
-            border.color: glassButton.primary ? Constants.glassEdge : Constants.border
+            border.color: glassButton.primary
+                ? Qt.rgba(1, 1, 1, 0.30)
+                : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.15) : Qt.rgba(0, 0, 0, 0.10))
         }
     }
 
-    contentItem: Text {
-        text: glassButton.text
-        color: glassButton.primary ? Constants.primaryForeground : Constants.foreground
-        font.pixelSize: Constants.bodySize
-        font.family: Constants.fontFamily
-        font.weight: glassButton.primary ? Font.DemiBold : Font.Medium
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
+    contentItem: Item {
+        Text {
+            font.family: Constants.fontFamily
+            anchors.centerIn: parent
+            text: glassButton.text
+            color: glassButton.primary ? Constants.primaryForeground : Constants.foreground
+            font.pixelSize: Constants.bodySize
+            font.weight: glassButton.primary ? Font.Bold : Font.DemiBold
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+
+            scale: glassButton.down ? 0.96 : 1.0
+            Behavior on scale {
+                SpringAnimation { spring: 6.0; damping: 0.4 }
+            }
+            Behavior on color {
+                ColorAnimation { duration: 180 }
+            }
+        }
     }
 }
