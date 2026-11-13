@@ -61,15 +61,6 @@ Window {
         modal: true
         interactive: true
 
-        // Smooth slide-up entrance
-        enter: Transition {
-            NumberAnimation { property: "position"; from: 0.0; to: 1.0; duration: 320; easing.type: Easing.OutCubic }
-        }
-        // Smooth slide-down exit
-        exit: Transition {
-            NumberAnimation { property: "position"; from: 1.0; to: 0.0; duration: 280; easing.type: Easing.InCubic }
-        }
-
         background: Rectangle {
             color: Constants.background
             topLeftRadius: 28

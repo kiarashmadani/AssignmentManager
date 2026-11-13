@@ -12,17 +12,27 @@ Item {
     property alias saveButton: saveButton
 
     // ── Drag Handle (Pinned at Top) ──
-    Rectangle {
+    Item {
         id: sheetHandle
         anchors.top: parent.top
-        anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
-        width: 38
-        height: 5
-        radius: 2.5
-        color: Constants.mutedForeground
-        opacity: 0.35
+        width: 100
+        height: 28
         z: 10
+
+        Rectangle {
+            anchors.centerIn: parent
+            width: 38
+            height: 5
+            radius: 2.5
+            color: Constants.mutedForeground
+            opacity: 0.35
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.cancelButton.clicked()
+        }
     }
 
     // ── Scrollable Sheet Body ──
@@ -32,12 +42,13 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: bottomActionBar.top
-        anchors.topMargin: 12
+        anchors.topMargin: 4
         anchors.bottomMargin: 8
         contentWidth: width
         contentHeight: formContent.implicitHeight + 20
         clip: true
-        boundsBehavior: Flickable.DragAndOvershootBounds
+        interactive: contentHeight > height
+        boundsBehavior: interactive ? Flickable.DragAndOvershootBounds : Flickable.StopAtBounds
 
         ColumnLayout {
             id: formContent
