@@ -89,7 +89,4 @@ Window {
         target: addPage.cancelButton
         function onClicked() { addSheet.close() }
     }
-    Connections {
-        targer: mainScreen.addassign
-    }
 }
