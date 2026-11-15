@@ -11,6 +11,12 @@ Item {
     property alias cancelButton: cancelButton
     property alias saveButton: saveButton
 
+    property alias titleText: nameField.text
+    property alias descriptionText: descriptionArea.text
+    property alias courseText: courseField.text
+    property alias datePicker: datePicker
+    property alias timePicker: timePicker
+
     // ── Drag Handle (Pinned at Top) ──
     Item {
         id: sheetHandle
@@ -29,10 +35,10 @@ Item {
             opacity: 0.35
         }
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: root.cancelButton.clicked()
-        }
+        // MouseArea {
+        //     anchors.fill: parent
+        //     onClicked: root.cancelButton.clicked()
+        // }
     }
 
     // ── Scrollable Sheet Body ──
@@ -88,7 +94,9 @@ Item {
                     color: Constants.card
                     opacity: 0.88
                     border.width: 1
-                    border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.08)
+                    border.color: Constants.isDark ? Qt.rgba(1, 1, 1,
+                                                             0.12) : Qt.rgba(
+                                                         0, 0, 0, 0.08)
 
                     ColumnLayout {
                         id: detailsColumn
@@ -163,7 +171,9 @@ Item {
                     color: Constants.card
                     opacity: 0.88
                     border.width: 1
-                    border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.08)
+                    border.color: Constants.isDark ? Qt.rgba(1, 1, 1,
+                                                             0.12) : Qt.rgba(
+                                                         0, 0, 0, 0.08)
 
                     RowLayout {
                         anchors.fill: parent
@@ -172,7 +182,7 @@ Item {
                         spacing: 10
 
                         Text {
-                            text: "\uD83D\uDCDA"  // Book emoji / icon
+                            text: "\uD83D\uDCDA" // Book emoji / icon
                             font.pixelSize: 16
                         }
 
@@ -208,8 +218,12 @@ Item {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: 14
 
-                    GlassDatePicker { id: datePicker }
-                    GlassTimePicker { id: timePicker }
+                    GlassDatePicker {
+                        id: datePicker
+                    }
+                    GlassTimePicker {
+                        id: timePicker
+                    }
                 }
             }
         }

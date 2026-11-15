@@ -45,6 +45,7 @@ qt_add_qml_module(appAssignmentManager
         TimeWheel.ui.qml
     RESOURCES
         fonts/Vazirmatn-Regular.ttf
+        SOURCES assignmentmanager.h assignmentmanager.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
