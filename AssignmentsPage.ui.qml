@@ -13,13 +13,13 @@ Item {
     Rectangle {
         id: page
         anchors.fill: parent
-        color: Constants.background
+        color: "transparent"
 
         // 1. Content layer that extends all the way to the top of the screen
         Rectangle {
             id: contentArea
             anchors.fill: parent
-            color: Constants.background
+            color: "transparent"
 
             ListView {
                 id: assignmentList
@@ -368,6 +368,7 @@ Item {
                 anchors.fill: parent
                 sourceItem: contentArea
                 sourceRect: Qt.rect(0, 0, topBlurStrip.width, topBlurStrip.height)
+                textureSize: Qt.size(Math.max(1, width * 0.5), Math.max(1, height * 0.5))
                 live: true
                 visible: false
             }

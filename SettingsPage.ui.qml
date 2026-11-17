@@ -13,12 +13,12 @@ Item {
     Rectangle {
         id: page
         anchors.fill: parent
-        color: Constants.background
+        color: "transparent"
 
         Rectangle {
             id: contentArea
             anchors.fill: parent
-            color: Constants.background
+            color: "transparent"
 
             Flickable {
                 anchors.fill: parent
@@ -211,6 +211,7 @@ Item {
                 anchors.fill: parent
                 sourceItem: contentArea
                 sourceRect: Qt.rect(0, 0, topBlurStrip.width, topBlurStrip.height)
+                textureSize: Qt.size(Math.max(1, width * 0.5), Math.max(1, height * 0.5))
                 live: true
                 visible: false
             }

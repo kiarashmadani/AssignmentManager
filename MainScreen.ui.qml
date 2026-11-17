@@ -18,6 +18,20 @@ Item {
         anchors.fill: parent
         color: Constants.background
 
+        // ── Animated Aurora Background (pure QML mesh, zero shader overhead) ──
+        AuroraBackground {
+            id: auroraEffect
+            anchors.fill: parent
+            z: 0
+
+            speed: 1.0
+
+            // Pull colours from the active theme
+            color1: Constants.primary
+            color2: Constants.accent
+            color3: Constants.secondary
+        }
+
         SwipeView {
             id: pages
             anchors.fill: parent
@@ -64,6 +78,7 @@ Item {
                     anchors.fill: parent
                     sourceItem: page
                     sourceRect: Qt.rect(addButton.x, addButton.y, addButton.width, addButton.height)
+                    textureSize: Qt.size(Math.max(1, width * 0.5), Math.max(1, height * 0.5))
                     live: true
                     visible: false
                 }
@@ -194,6 +209,7 @@ Item {
                 anchors.fill: parent
                 sourceItem: page
                 sourceRect: Qt.rect(0, root.height - parent.height, root.width, parent.height)
+                textureSize: Qt.size(Math.max(1, width * 0.5), Math.max(1, height * 0.5))
                 live: true
                 visible: false
             }

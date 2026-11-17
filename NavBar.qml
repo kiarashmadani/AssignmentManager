@@ -106,6 +106,7 @@ Item {
         anchors.fill: parent
         sourceItem: bar.blurSource
         sourceRect: Qt.rect(bar.sourceOffsetX, bar.sourceOffsetY, bar.width, bar.height)
+        textureSize: Qt.size(Math.max(1, width * 0.5), Math.max(1, height * 0.5))
         live: true
         hideSource: false
         visible: false
@@ -364,6 +365,7 @@ Item {
             readonly property real sampleX: bar.sourceOffsetX + lens.center - sampleW / 2
             readonly property real sampleY: bar.sourceOffsetY + (bar.height - sampleH) / 2
             sourceRect: Qt.rect(sampleX, sampleY, sampleW, sampleH)
+            textureSize: Qt.size(Math.max(1, width * 0.75), Math.max(1, height * 0.75))
             live: true
             hideSource: false
             visible: false
