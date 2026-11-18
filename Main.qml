@@ -16,10 +16,11 @@ Window {
     visible: true
     title: "Assignment Manager"
 
-    // On startup: apply the saved theme and language
+    // On startup: apply the saved theme and language, and hook up the C++ model
     Component.onCompleted: {
         Constants.themeIndex = appSettings.themeIndex
         Qt.uiLanguage = appSettings.languageCode
+        mainScreen.assignmentsPage.assignmentList.model = engine
     }
 
     Settings {
@@ -96,6 +97,25 @@ Window {
     }
     Connections {
         target: addPage.saveButton
-        function onClicked() { engine.addAssignment("", "", "", 0, 0, 0, 0, 0) }
+        function onClicked() {
+            var year   = addPage.datePicker.yearWheel.currentIndex + addPage.datePicker.firstYear
+            var month  = addPage.datePicker.monthWheel.currentIndex + addPage.datePicker.monthWheel.offset
+            var day    = addPage.datePicker.dayWheel.currentIndex + addPage.datePicker.dayWheel.offset
+            var hour   = addPage.timePicker.hourWheel.currentIndex
+            var minute = addPage.timePicker.minuteWheel.currentIndex
+
+            engine.addAssignment(
+                addPage.titleText,
+                addPage.descriptionText,
+                addPage.courseText,
+                year, month, day,
+                hour, minute
+            )
+
+            addPage.titleText = ""
+            addPage.descriptionText = ""
+            addPage.courseText = ""
+            addSheet.close()
+        }
     }
 }

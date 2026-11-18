@@ -11,6 +11,7 @@ Item {
     property alias pages: pages
     property alias navBar: navBar
     property alias addButton: addButton
+    property alias assignmentsPage: assignmentsPage
     property alias settingsPage: settingsPage
 
     Rectangle {
@@ -37,8 +38,8 @@ Item {
             anchors.fill: parent
             currentIndex: navBar.currentIndex
 
-            AssignmentsPage {}
-            SettingsPage {id: settingsPage}
+            AssignmentsPage { id: assignmentsPage }
+            SettingsPage { id: settingsPage }
         }
     }
 

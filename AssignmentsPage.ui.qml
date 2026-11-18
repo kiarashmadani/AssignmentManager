@@ -9,6 +9,7 @@ Item {
     height: Constants.height
 
     property int activeFilter: 0 // 0: All, 1: Today, 2: Pending, 3: Done
+    property alias assignmentList: assignmentList
 
     Rectangle {
         id: page
@@ -339,9 +340,9 @@ Item {
                     day: model.day
                     deadlineHours: model.deadlineHours
                     deadlineMinutes: model.deadlineMinutes
-                    priority: model.priority
-                    courseColor: model.courseColor
-                    isUrgent: model.isUrgent
+                    priority: model.priority || "Normal"
+                    courseColor: model.courseColor || Constants.accent
+                    isUrgent: Boolean(model.isUrgent)
 
                     // Dynamic Filter visibility
                     visible: {
