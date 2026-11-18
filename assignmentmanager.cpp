@@ -53,25 +53,39 @@ QVariant AssignmentManager::data(const QModelIndex &index, int role) const
     }
 }
 
-void AssignmentManager::addAssignment(
+bool AssignmentManager::addAssignment(
     const QString &title,
     const QString &description,
     const QString &course,
     int year, int month, int day,
     int hour, int minute)
 {
+    if (title.trimmed().isEmpty() || course.trimmed().isEmpty())
+    {
+        emit validationError(tr("Please fill at least Title and Course!"));
+        return false;
+    }
+
+    QDate dueDate(year, month, day);
+    if (!dueDate.isValid())
+    {
+        emit validationError(tr("Please select a valid date!"));
+        return false;
+    }
+
     Assignment addedAssignment;
-    addedAssignment.title = title;
-    addedAssignment.description = description;
-    addedAssignment.course = course;
+    addedAssignment.title = title.trimmed();
+    addedAssignment.description = description.trimmed();
+    addedAssignment.course = course.trimmed();
     addedAssignment.dueTime = QTime(hour, minute);
-    addedAssignment.dueDate = QDate(year, month, day);
+    addedAssignment.dueDate = dueDate;
     addedAssignment.isCompleted = false;
 
     int newRow = static_cast<int>(m_assignments.size());
     beginInsertRows(QModelIndex(), newRow, newRow);
     m_assignments.push_back(addedAssignment);
     endInsertRows();
+    return true;
 }
 
 void AssignmentManager::reloadAssignments()

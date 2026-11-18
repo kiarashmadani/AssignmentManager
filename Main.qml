@@ -87,24 +87,70 @@ Window {
         }
     }
 
+    GlassToast {
+        id: toast
+        parent: Overlay.overlay
+        z: 999
+        anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
+    }
+
+    Timer {
+        id: toastTimer
+        interval: 2600
+        onTriggered: toast.showing = false
+    }
+
+    Connections {
+        target: engine
+        function onValidationError(msg) {
+            toast.message = msg
+            toast.isError = true
+            toast.showing = true
+            toastTimer.restart()
+        }
+    }
+
+    Connections {
+        target: addPage
+        function onTitleTextChanged() {
+            if (addPage.titleText.trim().length > 0)
+                addPage.titleError = false
+        }
+        function onCourseTextChanged() {
+            if (addPage.courseText.trim().length > 0)
+                addPage.courseError = false
+        }
+    }
+
     Connections {
         target: mainScreen.addButton
-        function onClicked() { addSheet.open() }
+        function onClicked() {
+            addPage.titleError = false
+            addPage.courseError = false
+            addSheet.open()
+        }
     }
     Connections {
         target: addPage.cancelButton
-        function onClicked() { addSheet.close() }
+        function onClicked() {
+            addPage.titleError = false
+            addPage.courseError = false
+            addSheet.close()
+        }
     }
     Connections {
         target: addPage.saveButton
         function onClicked() {
+            addPage.titleError  = addPage.titleText.trim().length === 0
+            addPage.courseError = addPage.courseText.trim().length === 0
+
             var year   = addPage.datePicker.yearWheel.currentIndex + addPage.datePicker.firstYear
             var month  = addPage.datePicker.monthWheel.currentIndex + addPage.datePicker.monthWheel.offset
             var day    = addPage.datePicker.dayWheel.currentIndex + addPage.datePicker.dayWheel.offset
             var hour   = addPage.timePicker.hourWheel.currentIndex
             var minute = addPage.timePicker.minuteWheel.currentIndex
 
-            engine.addAssignment(
+            var ok = engine.addAssignment(
                 addPage.titleText,
                 addPage.descriptionText,
                 addPage.courseText,
@@ -112,10 +158,14 @@ Window {
                 hour, minute
             )
 
-            addPage.titleText = ""
-            addPage.descriptionText = ""
-            addPage.courseText = ""
-            addSheet.close()
+            if (ok) {
+                addPage.titleText = ""
+                addPage.descriptionText = ""
+                addPage.courseText = ""
+                addPage.titleError = false
+                addPage.courseError = false
+                addSheet.close()
+            }
         }
     }
 }

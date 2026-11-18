@@ -17,6 +17,9 @@ Item {
     property alias datePicker: datePicker
     property alias timePicker: timePicker
 
+    property bool titleError: false
+    property bool courseError: false
+
     // ── Drag Handle (Pinned at Top) ──
     Item {
         id: sheetHandle
@@ -93,10 +96,11 @@ Item {
                     radius: 16
                     color: Constants.card
                     opacity: 0.88
-                    border.width: 1
-                    border.color: Constants.isDark ? Qt.rgba(1, 1, 1,
-                                                             0.12) : Qt.rgba(
-                                                         0, 0, 0, 0.08)
+                    border.width: root.titleError ? 1.5 : 1
+                    border.color: root.titleError
+                                  ? Constants.destructive
+                                  : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.08))
+                    Behavior on border.color { ColorAnimation { duration: 180 } }
 
                     ColumnLayout {
                         id: detailsColumn
@@ -170,10 +174,11 @@ Item {
                     radius: 16
                     color: Constants.card
                     opacity: 0.88
-                    border.width: 1
-                    border.color: Constants.isDark ? Qt.rgba(1, 1, 1,
-                                                             0.12) : Qt.rgba(
-                                                         0, 0, 0, 0.08)
+                    border.width: root.courseError ? 1.5 : 1
+                    border.color: root.courseError
+                                  ? Constants.destructive
+                                  : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.08))
+                    Behavior on border.color { ColorAnimation { duration: 180 } }
 
                     RowLayout {
                         anchors.fill: parent

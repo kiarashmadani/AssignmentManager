@@ -44,6 +44,7 @@ qt_add_qml_module(appAssignmentManager
         GlassTimePicker.ui.qml
         TimeWheel.ui.qml
         AuroraBackground.qml
+        GlassToast.ui.qml
     SOURCES assignmentmanager.h assignmentmanager.cpp
     RESOURCES
         fonts/Vazirmatn-Regular.ttf

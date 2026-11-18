@@ -38,7 +38,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 public slots:
-    void addAssignment(
+    bool addAssignment(
         const QString &title,
         const QString &description,
         const QString &course,
@@ -52,6 +52,7 @@ private:
     void reloadAssignments();
 
 signals:
+    void validationError(const QString& msg);
 };
 
 #endif // ASSIGNMENTMANAGER_H
