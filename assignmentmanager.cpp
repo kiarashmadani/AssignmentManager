@@ -19,5 +19,7 @@ void AssignmentManager::addAssignment(
     Q_UNUSED(day);
     Q_UNUSED(hour);
     Q_UNUSED(minute);
+
+    qDebug() << "Function is working";
 }
 

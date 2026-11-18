@@ -1,6 +1,7 @@
 import QtQuick
 import QtCore
 import QtQuick.Controls.Basic
+import AssignmentManager
 
 Window {
     property alias addSheet: addSheet
@@ -53,6 +54,10 @@ Window {
         }
     }
 
+    AssignmentManager {
+        id: engine
+    }
+
     Drawer {
         id: addSheet
         edge: Qt.BottomEdge
@@ -88,5 +93,9 @@ Window {
     Connections {
         target: addPage.cancelButton
         function onClicked() { addSheet.close() }
+    }
+    Connections {
+        target: addPage.saveButton
+        function onClicked() { engine.addAssignment("", "", "", 0, 0, 0, 0, 0) }
     }
 }
