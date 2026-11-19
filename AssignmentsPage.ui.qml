@@ -28,7 +28,7 @@ Item {
                 anchors.leftMargin: Constants.padding
                 anchors.rightMargin: Constants.padding
                 clip: true
-                spacing: 12
+                spacing: 0
                 topMargin: topBlurStrip.height + 8
                 bottomMargin: 96 // Ensures cards scroll comfortably above the floating NavBar
 
@@ -332,7 +332,10 @@ Item {
                 }
 
                 delegate: AssignmentCard {
+                    id: cardItem
                     required property var model
+                    required property int index
+
                     width: ListView.view.width
                     title: model.title
                     descriptions: model.descriptions
@@ -343,13 +346,22 @@ Item {
                     priority: model.priority || "Normal"
                     courseColor: model.courseColor || Constants.accent
                     isUrgent: Boolean(model.isUrgent)
+                    isCompleted: Boolean(model.isCompleted)
 
-                    // Dynamic Filter visibility
-                    visible: {
-                        if (root.activeFilter === 1) return model.day === "Today"
-                        if (root.activeFilter === 2) return !doneBox.checked
-                        if (root.activeFilter === 3) return doneBox.checked
+                    readonly property bool matchesFilter: {
+                        if (root.activeFilter === 1) return model.day === "Today" || model.day === qsTr("Today")
+                        if (root.activeFilter === 2) return !model.isCompleted
+                        if (root.activeFilter === 3) return Boolean(model.isCompleted)
                         return true
+                    }
+
+                    visible: matchesFilter
+                    height: matchesFilter ? implicitHeight : 0
+
+                    onToggleRequested: {
+                        if (assignmentList.model && typeof assignmentList.model.toggleCompleted === "function") {
+                            assignmentList.model.toggleCompleted(index)
+                        }
                     }
                 }
             }

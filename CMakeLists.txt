@@ -4,7 +4,7 @@ project(AssignmentManager VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick LinguistTools)
+find_package(Qt6 REQUIRED COMPONENTS Quick LinguistTools Network)
 
 qt_standard_project_setup(REQUIRES 6.8
     I18N_SOURCE_LANGUAGE en
@@ -62,7 +62,7 @@ set_target_properties(appAssignmentManager PROPERTIES
 )
 
 target_link_libraries(appAssignmentManager
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick Qt6::Network
 )
 
 include(GNUInstallDirs)

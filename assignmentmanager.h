@@ -6,6 +6,11 @@
 #include <vector>
 #include <QDate>
 #include <QTime>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QByteArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 struct Assignment {
     QString title;
@@ -45,14 +50,19 @@ public slots:
         int year, int month, int day,
         int hour, int minute);
 
+    void toggleCompleted(int row);
+    void getCalendarOnline();
 
 private:
     std::vector<Assignment> m_assignments;
 
     void reloadAssignments();
 
+    QNetworkAccessManager *m_netManager = nullptr;
+
 signals:
     void validationError(const QString& msg);
+    void onlineCalendarReady(int year, int month, int day);
 };
 
 #endif // ASSIGNMENTMANAGER_H

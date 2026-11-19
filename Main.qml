@@ -21,12 +21,22 @@ Window {
         Constants.themeIndex = appSettings.themeIndex
         Qt.uiLanguage = appSettings.languageCode
         mainScreen.assignmentsPage.assignmentList.model = engine
+
+        // Set wheels immediately from saved cache (offline-ready!)
+        addPage.datePicker.yearWheel.currentIndex = Math.max(0, appSettings.savedYear - addPage.datePicker.firstYear)
+        addPage.datePicker.monthWheel.currentIndex = Math.max(0, appSettings.savedMonth - addPage.datePicker.monthWheel.offset)
+        addPage.datePicker.dayWheel.currentIndex = Math.max(0, appSettings.savedDay - addPage.datePicker.dayWheel.offset)
+
+        engine.getCalendarOnline()
     }
 
     Settings {
         id: appSettings
         property int themeIndex: 0
         property string languageCode: "en"
+        property int savedYear: 2026
+        property int savedMonth: 11
+        property int savedDay: 19
     }
 
     MainScreen {
@@ -108,6 +118,15 @@ Window {
             toast.showing = true
             toastTimer.restart()
         }
+        function onOnlineCalendarReady(year, month, day) {
+            appSettings.savedYear = year
+            appSettings.savedMonth = month
+            appSettings.savedDay = day
+
+            addPage.datePicker.yearWheel.currentIndex = Math.max(0, year - addPage.datePicker.firstYear)
+            addPage.datePicker.monthWheel.currentIndex = Math.max(0, month - addPage.datePicker.monthWheel.offset)
+            addPage.datePicker.dayWheel.currentIndex = Math.max(0, day - addPage.datePicker.dayWheel.offset)
+        }
     }
 
     Connections {
@@ -164,6 +183,12 @@ Window {
                 addPage.courseText = ""
                 addPage.titleError = false
                 addPage.courseError = false
+
+                // Reset wheels to today's date for next time
+                addPage.datePicker.yearWheel.currentIndex = Math.max(0, appSettings.savedYear - addPage.datePicker.firstYear)
+                addPage.datePicker.monthWheel.currentIndex = Math.max(0, appSettings.savedMonth - addPage.datePicker.monthWheel.offset)
+                addPage.datePicker.dayWheel.currentIndex = Math.max(0, appSettings.savedDay - addPage.datePicker.dayWheel.offset)
+
                 addSheet.close()
             }
         }

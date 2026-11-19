@@ -13,10 +13,17 @@ Item {
     property string priority: "Normal"
     property color courseColor: Constants.accent
     property bool isUrgent: false
+    property bool isCompleted: false
+    signal toggleRequested()
     property alias doneBox: doneBox
 
-    implicitHeight: row.implicitHeight + 28
+    implicitHeight: row.implicitHeight + 28 + 12
     implicitWidth: 360
+    clip: true
+
+    Behavior on height {
+        NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
+    }
 
     // ── Entrance animation: smooth fade-in + fluid slide-up ──
     opacity: 0
@@ -33,7 +40,11 @@ Item {
     // ── Main Glass Card Surface ──
     Rectangle {
         id: cardSurface
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 12
         radius: 18
 
         // Tactile liquid spring physics on hover and press
@@ -78,7 +89,7 @@ Item {
         // ── Card Content ──
         RowLayout {
             id: row
-            anchors.fill: parent
+            anchors.fill: cardSurface
             anchors.leftMargin: 18
             anchors.rightMargin: 18
             anchors.topMargin: 14
@@ -91,6 +102,8 @@ Item {
                 Layout.alignment: Qt.AlignTop
                 Layout.topMargin: 2
                 padding: 0
+                checked: assignmentCard.isCompleted
+                onClicked: assignmentCard.toggleRequested()
 
                 indicator: Item {
                     implicitWidth: 26
