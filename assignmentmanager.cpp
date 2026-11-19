@@ -93,6 +93,7 @@ bool AssignmentManager::addAssignment(
     m_assignments.push_back(addedAssignment);
     saveToFiles();
     endInsertRows();
+    emit statesChanged();
     return true;
 }
 
@@ -125,7 +126,6 @@ void AssignmentManager::getCalendarOnline()
         int minute = rootObj["minute"].toInt();
 
         emit onlineCalendarReady(year, month, day, hour, minute);
-        qDebug() << year << "/" << month << "/" << day << " " << hour << ":" << minute;
     });
 }
 
@@ -189,6 +189,7 @@ void AssignmentManager::loadFromFiles()
 
         m_assignments.push_back(item);
     }
+    emit statesChanged();
 }
 
 void AssignmentManager::toggleCompleted(int row)
@@ -200,5 +201,50 @@ void AssignmentManager::toggleCompleted(int row)
     QModelIndex idx = index(row);
     emit dataChanged(idx, idx, { IsCompletedRole });
     saveToFiles();
+    emit statesChanged();
+}
+
+
+
+int AssignmentManager::totalCount() const
+{
+    return static_cast<int>(m_assignments.size());
+}
+
+int AssignmentManager::totalCompleted() const
+{
+    int count = 0;
+    for (const auto &item : m_assignments) {
+        if (item.isCompleted)
+            count++;
+    }
+    return count;
+}
+
+int AssignmentManager::dueCompleteToday() const
+{
+    int count = 0;
+    QDate today = QDate::currentDate();
+    for (const auto &item : m_assignments) {
+        if (item.dueDate == today && !item.isCompleted)
+            count++;
+    }
+    return count;
+}
+
+int AssignmentManager::completionPercentage() const
+{
+    if (m_assignments.empty())
+        return 0;
+
+    return static_cast<int>((static_cast<double>(totalCompleted()) / m_assignments.size()) * 100.0);
+}
+
+qreal AssignmentManager::completionRatio() const
+{
+    if (m_assignments.empty())
+        return 0.0;
+
+    return static_cast<qreal>(totalCompleted()) / static_cast<qreal>(m_assignments.size());
 }
 

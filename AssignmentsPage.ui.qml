@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import QtQuick.Effects
+import QtQuick.Shapes
 
 Item {
     id: root
@@ -10,6 +11,14 @@ Item {
 
     property int activeFilter: 0 // 0: All, 1: Today, 2: Pending, 3: Done
     property alias assignmentList: assignmentList
+
+    // ── Live Model Properties ───────────────────────────
+    readonly property var mgr: assignmentList.model
+    readonly property int totalCount: mgr ? mgr.totalCount : 0
+    readonly property int totalCompleted: mgr ? mgr.totalCompleted : 0
+    readonly property int dueCompleteToday: mgr ? mgr.dueCompleteToday : 0
+    readonly property int completionPercentage: mgr ? mgr.completionPercentage : 0
+    readonly property real completionRatio: mgr ? mgr.completionRatio : 0.0
 
     Rectangle {
         id: page
@@ -93,14 +102,35 @@ Item {
                                     border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.10) : Qt.rgba(0, 0, 0, 0.06)
                                 }
 
-                                // Active progress indicator
-                                Rectangle {
+                                // Active progress arc (Apple Activity Ring style)
+                                Shape {
                                     anchors.fill: parent
-                                    radius: width / 2
-                                    color: "transparent"
-                                    border.width: 6
-                                    border.color: Constants.primary
-                                    opacity: 0.85
+                                    layer.enabled: true
+                                    layer.samples: 4
+                                    visible: root.completionRatio > 0.001
+
+                                    ShapePath {
+                                        strokeWidth: 6
+                                        strokeColor: Constants.primary
+                                        capStyle: ShapePath.RoundCap
+                                        fillColor: "transparent"
+
+                                        PathAngleArc {
+                                            centerX: 32
+                                            centerY: 32
+                                            radiusX: 29
+                                            radiusY: 29
+                                            startAngle: -90
+                                            sweepAngle: root.completionRatio * 360
+
+                                            Behavior on sweepAngle {
+                                                SpringAnimation {
+                                                    spring: 3.5
+                                                    damping: 0.38
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
 
                                 // Centered percentage text
@@ -109,7 +139,7 @@ Item {
                                     spacing: 0
                                     Text {
                                         Layout.alignment: Qt.AlignHCenter
-                                        text: "60%"
+                                        text: root.completionPercentage + "%"
                                         color: Constants.foreground
                                         font.pixelSize: 13
                                         font.bold: true
@@ -132,7 +162,9 @@ Item {
                                 }
 
                                 Text {
-                                    text: qsTr("3 of 5 Completed")
+                                    text: root.totalCount > 0
+                                        ? qsTr("%1 of %2 Completed").arg(root.totalCompleted).arg(root.totalCount)
+                                        : qsTr("No Assignments Yet")
                                     color: Constants.foreground
                                     font.pixelSize: Constants.titleSize - 4
                                     font.bold: true
@@ -144,18 +176,18 @@ Item {
                                     spacing: 8
                                     Layout.topMargin: 4
 
-                                    // Streak badge
+                                    // Pending badge
                                     Rectangle {
-                                        implicitWidth: streakText.implicitWidth + 14
+                                        implicitWidth: pendingText.implicitWidth + 14
                                         implicitHeight: 22
                                         radius: 11
                                         color: Qt.rgba(1, 0.5, 0.2, 0.14)
                                         border.width: 1
                                         border.color: Qt.rgba(1, 0.5, 0.2, 0.30)
                                         Text {
-                                            id: streakText
+                                            id: pendingText
                                             anchors.centerIn: parent
-                                            text: "\uD83D\uDD25 5-Day Streak"
+                                            text: qsTr("\uD83D\uDCCC %1 Pending").arg(root.totalCount - root.totalCompleted)
                                             font.pixelSize: 11
                                             font.bold: true
                                             color: Constants.isDark ? "#FFA066" : "#D45010"
@@ -174,7 +206,7 @@ Item {
                                         Text {
                                             id: dueTodayText
                                             anchors.centerIn: parent
-                                            text: "\u23F3 2 Due Today"
+                                            text: qsTr("\u23F3 %1 Due Today").arg(root.dueCompleteToday)
                                             font.pixelSize: 11
                                             font.bold: true
                                             color: Constants.isDark ? "#70B8FF" : "#1A70D0"

@@ -29,6 +29,12 @@ class AssignmentManager : public QAbstractListModel
     Q_OBJECT
     QML_ELEMENT
 
+    Q_PROPERTY(int      totalCount              READ totalCount             NOTIFY statesChanged FINAL)
+    Q_PROPERTY(int      totalCompleted          READ totalCompleted         NOTIFY statesChanged FINAL)
+    Q_PROPERTY(int      dueCompleteToday        READ dueCompleteToday       NOTIFY statesChanged FINAL)
+    Q_PROPERTY(int      completionPercentage    READ completionPercentage   NOTIFY statesChanged FINAL)
+    Q_PROPERTY(qreal    completionRatio         READ completionRatio        NOTIFY statesChanged  FINAL)
+
 public:
     enum Roles {
         TitleRole = Qt::UserRole + 1,
@@ -44,6 +50,12 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+    int totalCount() const;
+    int totalCompleted() const;
+    int dueCompleteToday() const;
+    int completionPercentage() const;
+    qreal completionRatio() const;
 
 public slots:
     bool addAssignment(
@@ -65,6 +77,7 @@ private:
 signals:
     void validationError(const QString& msg);
     void onlineCalendarReady(int year, int month, int day, int hour, int minute);
+    void statesChanged();
 };
 
 #endif // ASSIGNMENTMANAGER_H
