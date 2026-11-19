@@ -10,7 +10,10 @@
 #include <QNetworkReply>
 #include <QByteArray>
 #include <QJsonDocument>
+#include <QJsonArray>
 #include <QJsonObject>
+#include <QStandardPaths>
+#include <QDir>
 
 struct Assignment {
     QString title;
@@ -52,17 +55,16 @@ public slots:
 
     void toggleCompleted(int row);
     void getCalendarOnline();
+    void saveToFiles();
+    void loadFromFiles();
 
 private:
     std::vector<Assignment> m_assignments;
-
-    void reloadAssignments();
-
     QNetworkAccessManager *m_netManager = nullptr;
 
 signals:
     void validationError(const QString& msg);
-    void onlineCalendarReady(int year, int month, int day);
+    void onlineCalendarReady(int year, int month, int day, int hour, int minute);
 };
 
 #endif // ASSIGNMENTMANAGER_H

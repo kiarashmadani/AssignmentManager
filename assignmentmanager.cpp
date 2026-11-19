@@ -3,6 +3,7 @@
 AssignmentManager::AssignmentManager(QObject *parent)
     : QAbstractListModel{parent}
 {
+    loadFromFiles();
     m_netManager = new QNetworkAccessManager(this);
 }
 
@@ -90,6 +91,7 @@ bool AssignmentManager::addAssignment(
     int newRow = static_cast<int>(m_assignments.size());
     beginInsertRows(QModelIndex(), newRow, newRow);
     m_assignments.push_back(addedAssignment);
+    saveToFiles();
     endInsertRows();
     return true;
 }
@@ -119,11 +121,74 @@ void AssignmentManager::getCalendarOnline()
         int year = rootObj["year"].toInt();
         int month = rootObj["month"].toInt();
         int day = rootObj["day"].toInt();
+        int hour = rootObj["hour"].toInt();
+        int minute = rootObj["minute"].toInt();
 
-
-        emit onlineCalendarReady(year, month, day);
-        qDebug() << year << "/" << month << "/" << day;
+        emit onlineCalendarReady(year, month, day, hour, minute);
+        qDebug() << year << "/" << month << "/" << day << " " << hour << ":" << minute;
     });
+}
+
+void AssignmentManager::saveToFiles()
+{
+    QString folderPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir dir(folderPath);
+    if (!dir.exists())
+        dir.mkpath(".");
+    QString filePath = dir.filePath("assignments.json");
+
+    QJsonArray array;
+    foreach (const auto& item, m_assignments)
+    {
+        QJsonObject obj;
+        obj["title"]       = item.title;
+        obj["description"] = item.description;
+        obj["course"]      = item.course;
+        obj["dueDate"]     = item.dueDate.toString(Qt::ISODate);
+        obj["dueTime"]     = item.dueTime.toString("HH:mm");
+        obj["isCompleted"] = item.isCompleted;
+
+        array.append(obj);
+    }
+
+    QJsonDocument doc(array);
+    QFile file(filePath);
+    if (file.open(QIODevice::WriteOnly))
+    {
+        file.write(doc.toJson());
+        file.close();
+    }
+}
+
+void AssignmentManager::loadFromFiles()
+{
+    QString folderPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir dir(folderPath);
+    if (!dir.exists())
+        dir.mkpath(".");
+    QString filePath = dir.filePath("assignments.json");
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly))
+        return;
+
+    QByteArray data = file.readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonArray array = doc.array();
+    foreach (const auto& val, array)
+    {
+        QJsonObject obj = val.toObject();
+        Assignment item;
+
+        item.title       = obj["title"].toString();
+        item.description = obj["description"].toString();
+        item.course      = obj["course"].toString();
+        item.dueDate     = QDate::fromString(obj["dueDate"].toString(), Qt::ISODate);
+        item.dueTime     = QTime::fromString(obj["dueTime"].toString(), "HH:mm");
+        item.isCompleted = obj["isCompleted"].toBool();
+
+        m_assignments.push_back(item);
+    }
 }
 
 void AssignmentManager::toggleCompleted(int row)
@@ -134,10 +199,6 @@ void AssignmentManager::toggleCompleted(int row)
     m_assignments[row].isCompleted = !m_assignments[row].isCompleted;
     QModelIndex idx = index(row);
     emit dataChanged(idx, idx, { IsCompletedRole });
-}
-
-void AssignmentManager::reloadAssignments()
-{
-
+    saveToFiles();
 }
 

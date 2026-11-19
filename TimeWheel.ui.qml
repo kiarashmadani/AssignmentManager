@@ -1,38 +1,85 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls.Basic
+import QtQuick.Effects
 
 Tumbler {
     id: wheel
     implicitWidth: 50
-    implicitHeight: 140
-    visibleItemCount: 5
+    implicitHeight: 182
+    visibleItemCount: 7
     property int offset: 0          // shown number = row + offset (days and months start at 1)
 
     wrap: true
 
     delegate: Item {
+        id: delegateItem
         required property int index
         required property var modelData
         readonly property int value: modelData + (Tumbler.tumbler as TimeWheel).offset
-        readonly property real disp: Math.abs(Tumbler.displacement)
-        readonly property real normalDisp: Math.min(1.0, disp / (Tumbler.tumbler.visibleItemCount / 2))
+
+        // Safely access attached displacement on the delegate root item
+        readonly property real rawDisp: Tumbler.displacement
+        readonly property real disp: Math.abs(rawDisp)
+
+        // Drum cylinder angular position in radians (+/-75 deg at displacement +/-3)
+        // 75 deg = 1.309 rad -> theta = rawDisp * (1.309 / 3) = rawDisp * 0.436
+        readonly property real theta: Math.max(-1.35, Math.min(1.35, rawDisp * 0.436))
+        readonly property real cosTheta: Math.max(0.08, Math.cos(theta))
+        readonly property real angleDeg: Math.max(-75, Math.min(75, rawDisp * 25.0))
 
         width: wheel.width
         height: wheel.height / wheel.visibleItemCount
 
-        // Apple 3D Drum Perspective Falloff
-        opacity: Math.max(0.12, 1.0 - Math.pow(normalDisp, 1.2) * 0.82)
-        scale: Math.max(0.68, 1.05 - normalDisp * 0.32)
+        // 1. Apple Alarm App Opacity Falloff:
+        // Center is 1.0 (100%), 1 step away is ~0.45, 2 steps away is ~0.05, 3 steps is 0.0 (fade out)
+        opacity: {
+            if (disp <= 0.45) return 1.0
+            var factor = Math.max(0.0, 1.0 - (disp - 0.45) / 2.2)
+            return Math.pow(factor, 2.6)
+        }
 
+        // 2. Physical cylinder foreshortening + 3D drum tilt:
+        // Height (Y-scale) compresses drastically as the surface rolls away,
+        // while Rotation tilts the numbers along the tangent of the drum cylinder.
+        transform: [
+            Scale {
+                origin.x: delegateItem.width / 2
+                origin.y: delegateItem.height / 2
+                yScale: Math.max(0.12, Math.pow(delegateItem.cosTheta, 1.4))
+                xScale: Math.max(0.85, 1.0 - (1.0 - delegateItem.cosTheta) * 0.14)
+            },
+            Rotation {
+                origin.x: delegateItem.width / 2
+                origin.y: delegateItem.height / 2
+                axis { x: 1; y: 0; z: 0 }
+                angle: -delegateItem.angleDeg
+            }
+        ]
+
+        // Luminous number glyph with cylindrical Y-offset compression & progressive horizon blur
         Text {
+            id: numText
             anchors.centerIn: parent
-            text: (parent.value < 10 ? "0" : "") + parent.value
-            color: parent.disp < 0.5 ? Constants.foreground : Constants.mutedForeground
-            font.pixelSize: parent.disp < 0.5 ? Constants.bodySize + 6 : Constants.bodySize + 3
+            // Y-offset compresses item spacing towards the horizon curve:
+            // Delta Y = H * (2.29 * sin(theta) - rawDisp)
+            anchors.verticalCenterOffset: delegateItem.height * (2.29 * Math.sin(delegateItem.theta) - delegateItem.rawDisp)
+
+            text: (delegateItem.value < 10 ? "0" : "") + delegateItem.value
+            color: delegateItem.disp < 0.45 ? Constants.foreground : Constants.mutedForeground
+            font.pixelSize: Constants.bodySize + 4
             font.family: Constants.fontFamily
-            font.weight: parent.disp < 0.5 ? Font.Bold : Font.Normal
+            font.weight: delegateItem.disp < 0.45 ? Font.Bold : Font.Normal
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+
+            // Progressive blur for numbers rolling away to top/bottom horizons (Apple Alarm style)
+            layer.enabled: delegateItem.disp > 0.55
+            layer.effect: MultiEffect {
+                blurEnabled: true
+                blur: Math.min(1.0, (delegateItem.disp - 0.55) * 0.65)
+                blurMax: 8
+            }
         }
     }
 }

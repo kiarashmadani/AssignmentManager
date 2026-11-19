@@ -26,6 +26,8 @@ Window {
         addPage.datePicker.yearWheel.currentIndex = Math.max(0, appSettings.savedYear - addPage.datePicker.firstYear)
         addPage.datePicker.monthWheel.currentIndex = Math.max(0, appSettings.savedMonth - addPage.datePicker.monthWheel.offset)
         addPage.datePicker.dayWheel.currentIndex = Math.max(0, appSettings.savedDay - addPage.datePicker.dayWheel.offset)
+        addPage.timePicker.hourWheel.currentIndex = appSettings.savedHour
+        addPage.timePicker.minuteWheel.currentIndex = appSettings.savedMinute
 
         engine.getCalendarOnline()
     }
@@ -37,6 +39,8 @@ Window {
         property int savedYear: 2026
         property int savedMonth: 11
         property int savedDay: 19
+        property int savedHour: 12
+        property int savedMinute: 0
     }
 
     MainScreen {
@@ -118,14 +122,18 @@ Window {
             toast.showing = true
             toastTimer.restart()
         }
-        function onOnlineCalendarReady(year, month, day) {
+        function onOnlineCalendarReady(year, month, day, hour, minute) {
             appSettings.savedYear = year
             appSettings.savedMonth = month
             appSettings.savedDay = day
+            appSettings.savedHour = hour
+            appSettings.savedMinute = minute
 
             addPage.datePicker.yearWheel.currentIndex = Math.max(0, year - addPage.datePicker.firstYear)
             addPage.datePicker.monthWheel.currentIndex = Math.max(0, month - addPage.datePicker.monthWheel.offset)
             addPage.datePicker.dayWheel.currentIndex = Math.max(0, day - addPage.datePicker.dayWheel.offset)
+            addPage.timePicker.hourWheel.currentIndex = hour
+            addPage.timePicker.minuteWheel.currentIndex = minute
         }
     }
 
@@ -184,10 +192,12 @@ Window {
                 addPage.titleError = false
                 addPage.courseError = false
 
-                // Reset wheels to today's date for next time
+                // Reset wheels to today's date & time for next time
                 addPage.datePicker.yearWheel.currentIndex = Math.max(0, appSettings.savedYear - addPage.datePicker.firstYear)
                 addPage.datePicker.monthWheel.currentIndex = Math.max(0, appSettings.savedMonth - addPage.datePicker.monthWheel.offset)
                 addPage.datePicker.dayWheel.currentIndex = Math.max(0, appSettings.savedDay - addPage.datePicker.dayWheel.offset)
+                addPage.timePicker.hourWheel.currentIndex = appSettings.savedHour
+                addPage.timePicker.minuteWheel.currentIndex = appSettings.savedMinute
 
                 addSheet.close()
             }

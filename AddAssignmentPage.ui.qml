@@ -220,14 +220,18 @@ Item {
                 }
 
                 RowLayout {
-                    Layout.alignment: Qt.AlignHCenter
-                    spacing: 14
+                    Layout.fillWidth: true
+                    spacing: 12
 
                     GlassDatePicker {
                         id: datePicker
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: 58
                     }
                     GlassTimePicker {
                         id: timePicker
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: 42
                     }
                 }
             }

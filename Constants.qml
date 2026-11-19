@@ -26,13 +26,17 @@ QtObject {
     readonly property color shadowColor: "#000000"
     readonly property real shadowOpacity: isDark ? 0.5 : 0.18
 
+    readonly property FontLoader englishFont: FontLoader {
+        source: "fonts/SF-Pro-Text-Semibold.otf"
+    }
+
     readonly property FontLoader persianFont: FontLoader {
-            source: "fonts/Vazirmatn-Regular.ttf"
+        source: "fonts/Vazirmatn-Regular.ttf"
     }
 
     readonly property string fontFamily: Qt.uiLanguage === "fa"
-                        ? persianFont.name
-                        : Qt.application.font.family
+                        ? (persianFont.name && persianFont.name.length > 0 ? persianFont.name : "Vazirmatn")
+                        : (englishFont.name && englishFont.name.length > 0 ? englishFont.name : Qt.application.font.family)
 
     readonly property color scrim: "#B3000000"   // dark veil behind sheets (70% black)
 
