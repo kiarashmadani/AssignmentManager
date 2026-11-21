@@ -258,6 +258,10 @@ Item {
             opacity: 0.50
         }
 
+        Item {
+            Layout.fillHeight: true
+        }
+
         RowLayout {
             anchors.fill: parent
             anchors.leftMargin: Constants.padding
