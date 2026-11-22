@@ -279,14 +279,17 @@ Item {
                 }
 
                 // ── Apple-Style Translucent Capsule Badges ──
-                RowLayout {
+                Flow {
+                    id: badgesFlow
                     Layout.fillWidth: true
                     Layout.topMargin: 4
-                    spacing: 8
+                    spacing: 6
+                    implicitHeight: childrenRect.height
+                    Layout.preferredHeight: childrenRect.height
 
                     // 1. Deadline Capsule Chip
                     Rectangle {
-                        implicitWidth: deadlineRow.implicitWidth + 20
+                        implicitWidth: Math.min(deadlineRow.implicitWidth + 20, (badgesFlow.width > 0 ? badgesFlow.width : 280))
                         implicitHeight: 26
                         radius: 13
                         color: assignmentCard.isWarningOverdue
@@ -303,10 +306,13 @@ Item {
 
                         RowLayout {
                             id: deadlineRow
-                            anchors.centerIn: parent
+                            anchors.fill: parent
+                            anchors.leftMargin: 10
+                            anchors.rightMargin: 10
                             spacing: 5
 
                             Text {
+                                Layout.alignment: Qt.AlignVCenter
                                 text: assignmentCard.isOverdue ? "\u26A0\uFE0F" : (assignmentCard.isUrgent ? "\uD83D\uDD25" : "\u23F1")
                                 font.pixelSize: 11
                                 color: assignmentCard.isWarningOverdue
@@ -315,6 +321,8 @@ Item {
                             }
 
                             Text {
+                                Layout.fillWidth: true
+                                Layout.alignment: Qt.AlignVCenter
                                 font.family: Constants.fontFamily
                                 text: (assignmentCard.isOverdue ? qsTr("Overdue ") : qsTr("Due ")) + assignmentCard.day + " " + assignmentCard.deadlineHours + ":" + assignmentCard.deadlineMinutes
                                 color: assignmentCard.isWarningOverdue
@@ -322,13 +330,14 @@ Item {
                                        : (assignmentCard.isWarningUrgent ? Constants.urgent : Constants.foreground)
                                 font.pixelSize: Constants.captionSize - 1
                                 font.weight: Font.Medium
+                                elide: Text.ElideRight
                             }
                         }
                     }
 
                     // 2. Course Capsule Chip with Apple Calendar-style Category Dot
                     Rectangle {
-                        implicitWidth: courseRow.implicitWidth + 20
+                        implicitWidth: Math.min(courseRow.implicitWidth + 20, (badgesFlow.width > 0 ? badgesFlow.width : 280))
                         implicitHeight: 26
                         radius: 13
                         color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.04)
@@ -337,28 +346,33 @@ Item {
 
                         RowLayout {
                             id: courseRow
-                            anchors.centerIn: parent
+                            anchors.fill: parent
+                            anchors.leftMargin: 10
+                            anchors.rightMargin: 10
                             spacing: 6
 
                             // Category Indicator Dot
                             Rectangle {
-                                width: 7
-                                height: 7
+                                Layout.preferredWidth: 7
+                                Layout.preferredHeight: 7
                                 radius: 3.5
                                 color: assignmentCard.courseColor
+                                Layout.alignment: Qt.AlignVCenter
                             }
 
                             Text {
+                                id: courseTitleText
+                                Layout.fillWidth: true
+                                Layout.alignment: Qt.AlignVCenter
                                 font.family: Constants.fontFamily
                                 text: assignmentCard.course
                                 color: Constants.foreground
                                 font.pixelSize: Constants.captionSize - 1
                                 font.weight: Font.DemiBold
+                                elide: Text.ElideRight
                             }
                         }
                     }
-
-                    Item { Layout.fillWidth: true }
                 }
             }
         }
