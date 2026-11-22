@@ -36,9 +36,12 @@ class AssignmentManager : public QAbstractListModel
     Q_PROPERTY(int      dueCompleteToday        READ dueCompleteToday       NOTIFY statesChanged FINAL)
     Q_PROPERTY(int      overdueCount            READ overdueCount           NOTIFY statesChanged FINAL)
     Q_PROPERTY(int      urgentCount             READ urgentCount            NOTIFY statesChanged FINAL)
+    Q_PROPERTY(int      urgentPendingCount      READ urgentPendingCount     NOTIFY statesChanged FINAL)
     Q_PROPERTY(int      completionPercentage    READ completionPercentage   NOTIFY statesChanged FINAL)
     Q_PROPERTY(qreal    completionRatio         READ completionRatio        NOTIFY statesChanged FINAL)
     Q_PROPERTY(qreal    overdueRatio            READ overdueRatio           NOTIFY statesChanged FINAL)
+    Q_PROPERTY(qreal    urgentRatio             READ urgentRatio            NOTIFY statesChanged FINAL)
+    Q_PROPERTY(qreal    urgentPendingRatio      READ urgentPendingRatio     NOTIFY statesChanged FINAL)
 
 public:
     enum Roles {
@@ -63,9 +66,12 @@ public:
     int dueCompleteToday() const;
     int overdueCount() const;
     int urgentCount() const;
+    int urgentPendingCount() const;
     int completionPercentage() const;
     qreal completionRatio() const;
     qreal overdueRatio() const;
+    qreal urgentRatio() const;
+    qreal urgentPendingRatio() const;
 
 public slots:
     bool addAssignment(

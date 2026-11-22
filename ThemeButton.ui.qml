@@ -13,6 +13,7 @@ Button {
 
     implicitWidth: 120
     implicitHeight: 48
+    z: (themeButton.hovered || themeButton.down) ? 5 : 1
 
     // Tactile liquid spring physics on press and hover
     scale: themeButton.down ? 0.93 : (themeButton.hovered ? 1.04 : 1.0)

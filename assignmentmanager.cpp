@@ -251,6 +251,17 @@ int AssignmentManager::urgentCount() const
     return count;
 }
 
+int AssignmentManager::urgentPendingCount() const
+{
+    int count = 0;
+    QDateTime now = QDateTime::currentDateTime();
+    for (const auto &item : m_assignments) {
+        if (item.isUrgent && !item.isCompleted && QDateTime(item.dueDate, item.dueTime) >= now)
+            count++;
+    }
+    return count;
+}
+
 int AssignmentManager::completionPercentage() const
 {
     if (m_assignments.empty())
@@ -273,5 +284,21 @@ qreal AssignmentManager::overdueRatio() const
         return 0.0;
 
     return static_cast<qreal>(overdueCount()) / static_cast<qreal>(m_assignments.size());
+}
+
+qreal AssignmentManager::urgentRatio() const
+{
+    if (m_assignments.empty())
+        return 0.0;
+
+    return static_cast<qreal>(urgentCount()) / static_cast<qreal>(m_assignments.size());
+}
+
+qreal AssignmentManager::urgentPendingRatio() const
+{
+    if (m_assignments.empty())
+        return 0.0;
+
+    return static_cast<qreal>(urgentPendingCount()) / static_cast<qreal>(m_assignments.size());
 }
 

@@ -9,6 +9,7 @@ Button {
 
     implicitHeight: 52
     implicitWidth: 120
+    z: (glassButton.hovered || glassButton.down) ? 5 : 1
 
     // Tactile liquid spring on press and hover (Apple fluid physics)
     scale: glassButton.down ? 0.95 : (glassButton.hovered ? 1.025 : 1.0)

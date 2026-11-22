@@ -336,12 +336,18 @@ QtObject {
     Behavior on accent { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
     property color accentForeground: theme.accentForeground
     Behavior on accentForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
-    property color destructive: theme.destructive
+    // ── Dedicated Universal Status Colors (Independent of Themes) ──
+    // Overdue: Blazing Pure Siren Red (high-contrast, never blends with theme pinks/corals)
+    readonly property color overdue: "#FF1E38"
+
+    // Urgent: Vibrant Electric Flame Orange (distinct from Red, distinct from theme primary)
+    property color urgent: isDark ? "#FF9100" : "#E65100"
+    Behavior on urgent { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+
+    property color destructive: overdue
     Behavior on destructive { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
     property color destructiveForeground: theme.destructiveForeground
     Behavior on destructiveForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
-    property color urgent: isDark ? "#FF8822" : "#D84315"
-    Behavior on urgent { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
     property color border: theme.border
     Behavior on border { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
     property color ring: theme.ring

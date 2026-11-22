@@ -21,9 +21,9 @@ Item {
     signal toggleRequested()
     property alias doneBox: doneBox
 
-    implicitHeight: row.implicitHeight + 28 + 12
+    implicitHeight: row.implicitHeight + 28 + 14
     implicitWidth: 360
-    clip: true
+    z: (cardHover.hovered || cardTap.pressed) ? 5 : 1
 
     Behavior on height {
         NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
@@ -48,7 +48,10 @@ Item {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 12
+        anchors.leftMargin: 3
+        anchors.rightMargin: 3
+        anchors.topMargin: 3
+        anchors.bottomMargin: 11
         radius: 18
 
         // Tactile liquid spring physics on hover and press

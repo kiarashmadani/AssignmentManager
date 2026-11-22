@@ -16,6 +16,7 @@ Button {
 
     implicitWidth: 120
     implicitHeight: 48
+    z: (languageButton.hovered || languageButton.down) ? 5 : 1
 
     // Tactile liquid spring physics on press and hover
     scale: languageButton.down ? 0.93 : (languageButton.hovered ? 1.04 : 1.0)

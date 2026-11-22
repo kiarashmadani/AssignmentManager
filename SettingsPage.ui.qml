@@ -33,7 +33,8 @@ Item {
 
                 ColumnLayout {
                     id: settingsLayout
-                    width: parent.width
+                    width: parent.width - 8
+                    anchors.horizontalCenter: parent.horizontalCenter
                     spacing: 18
 
                     // ── Scholar Profile Liquid Glass Card ──

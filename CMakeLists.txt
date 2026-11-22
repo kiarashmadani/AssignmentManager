@@ -45,6 +45,7 @@ qt_add_qml_module(appAssignmentManager
         TimeWheel.ui.qml
         AuroraBackground.qml
         GlassToast.ui.qml
+        DynamicMetricBadge.qml
     SOURCES assignmentmanager.h assignmentmanager.cpp
     RESOURCES
         fonts/Vazirmatn-Regular.ttf

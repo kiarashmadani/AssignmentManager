@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import QtQuick.Effects
 import QtQuick.Shapes
@@ -19,9 +18,11 @@ Item {
     readonly property int dueCompleteToday: mgr ? mgr.dueCompleteToday : 0
     readonly property int overdueCount: mgr ? mgr.overdueCount : 0
     readonly property int urgentCount: mgr ? mgr.urgentCount : 0
+    readonly property int urgentPendingCount: mgr ? mgr.urgentPendingCount : 0
     readonly property int completionPercentage: mgr ? mgr.completionPercentage : 0
     readonly property real completionRatio: mgr ? mgr.completionRatio : 0.0
     readonly property real overdueRatio: mgr ? mgr.overdueRatio : 0.0
+    readonly property real urgentPendingRatio: mgr ? mgr.urgentPendingRatio : 0.0
 
     Rectangle {
         id: page
@@ -106,7 +107,7 @@ Item {
                                     border.color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.10) : Qt.rgba(0, 0, 0, 0.06)
                                 }
 
-                                // Active progress arc (Apple Activity Ring style)
+                                // 1. Active progress arc (Apple Activity Ring style)
                                 Shape {
                                     anchors.fill: parent
                                     layer.enabled: true
@@ -125,7 +126,7 @@ Item {
                                             radiusX: 29
                                             radiusY: 29
                                             startAngle: -90
-                                            sweepAngle: root.completionRatio * 360
+                                            sweepAngle: Math.max(0, root.completionRatio * 360 - (root.overdueRatio > 0.001 || root.urgentPendingRatio > 0.001 ? 6 : 0))
 
                                             Behavior on sweepAngle {
                                                 SpringAnimation {
@@ -137,7 +138,38 @@ Item {
                                     }
                                 }
 
-                                // Overdue warning arc in destructive red (sweeps counter-clockwise from 12 o'clock)
+                                // 2. Urgent pending warning arc (sweeps clockwise after Completed)
+                                Shape {
+                                    anchors.fill: parent
+                                    layer.enabled: true
+                                    layer.samples: 4
+                                    visible: root.urgentPendingRatio > 0.001
+
+                                    ShapePath {
+                                        strokeWidth: 6
+                                        strokeColor: Constants.urgent
+                                        capStyle: ShapePath.RoundCap
+                                        fillColor: "transparent"
+
+                                        PathAngleArc {
+                                            centerX: 32
+                                            centerY: 32
+                                            radiusX: 29
+                                            radiusY: 29
+                                            startAngle: -90 + (root.completionRatio * 360)
+                                            sweepAngle: Math.max(0, root.urgentPendingRatio * 360 - (root.overdueRatio > 0.001 ? 6 : 0))
+
+                                            Behavior on sweepAngle {
+                                                SpringAnimation {
+                                                    spring: 3.5
+                                                    damping: 0.38
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // 3. Overdue warning arc in blazing siren red (sweeps counter-clockwise from 12 o'clock)
                                 Shape {
                                     anchors.fill: parent
                                     layer.enabled: true
@@ -146,7 +178,7 @@ Item {
 
                                     ShapePath {
                                         strokeWidth: 6
-                                        strokeColor: Constants.destructive
+                                        strokeColor: Constants.overdue
                                         capStyle: ShapePath.RoundCap
                                         fillColor: "transparent"
 
@@ -156,7 +188,7 @@ Item {
                                             radiusX: 29
                                             radiusY: 29
                                             startAngle: -90
-                                            sweepAngle: -root.overdueRatio * 360
+                                            sweepAngle: -Math.max(0, root.overdueRatio * 360 - (root.completionRatio > 0.001 ? 6 : 0))
 
                                             Behavior on sweepAngle {
                                                 SpringAnimation {
@@ -207,90 +239,14 @@ Item {
                                     font.family: Constants.fontFamily
                                 }
 
-                                // Mini Metric Badges Flow (wraps badges to next row on narrow screens)
-                                Flow {
-                                    Layout.fillWidth: true
+                                // Dynamic rolling ticker sticker (cycles Overdue, Urgent, Pending, Due Today)
+                                DynamicMetricBadge {
+                                    id: dynamicBadge
                                     Layout.topMargin: 4
-                                    spacing: 6
-                                    Layout.preferredHeight: childrenRect.height
-
-                                    // Overdue warning badge (ONLY shown when overdueCount > 0!)
-                                    Rectangle {
-                                        visible: root.overdueCount > 0
-                                        implicitWidth: overdueBadgeText.implicitWidth + 14
-                                        implicitHeight: 22
-                                        radius: 11
-                                        color: Qt.rgba(1, 0.2, 0.3, 0.18)
-                                        border.width: 1
-                                        border.color: Qt.rgba(1, 0.2, 0.3, 0.45)
-                                        Text {
-                                            id: overdueBadgeText
-                                            anchors.centerIn: parent
-                                            text: qsTr("\u26A0\uFE0F %1 Overdue").arg(root.overdueCount)
-                                            font.pixelSize: 11
-                                            font.bold: true
-                                            color: Constants.destructive
-                                            font.family: Constants.fontFamily
-                                        }
-                                    }
-
-                                    // Urgent warning badge (ONLY shown when urgentCount > 0!)
-                                    Rectangle {
-                                        visible: root.urgentCount > 0
-                                        implicitWidth: urgentBadgeText.implicitWidth + 14
-                                        implicitHeight: 22
-                                        radius: 11
-                                        color: Qt.rgba(1, 0.55, 0.14, 0.18)
-                                        border.width: 1
-                                        border.color: Qt.rgba(1, 0.55, 0.14, 0.45)
-                                        Text {
-                                            id: urgentBadgeText
-                                            anchors.centerIn: parent
-                                            text: qsTr("\uD83D\uDD25 %1 Urgent").arg(root.urgentCount)
-                                            font.pixelSize: 11
-                                            font.bold: true
-                                            color: Constants.urgent
-                                            font.family: Constants.fontFamily
-                                        }
-                                    }
-
-                                    // Pending badge
-                                    Rectangle {
-                                        implicitWidth: pendingText.implicitWidth + 14
-                                        implicitHeight: 22
-                                        radius: 11
-                                        color: Qt.rgba(1, 0.5, 0.2, 0.14)
-                                        border.width: 1
-                                        border.color: Qt.rgba(1, 0.5, 0.2, 0.30)
-                                        Text {
-                                            id: pendingText
-                                            anchors.centerIn: parent
-                                            text: qsTr("\uD83D\uDCCC %1 Pending").arg(root.totalCount - root.totalCompleted)
-                                            font.pixelSize: 11
-                                            font.bold: true
-                                            color: Constants.isDark ? "#FFA066" : "#D45010"
-                                            font.family: Constants.fontFamily
-                                        }
-                                    }
-
-                                    // Due Today badge
-                                    Rectangle {
-                                        implicitWidth: dueTodayText.implicitWidth + 14
-                                        implicitHeight: 22
-                                        radius: 11
-                                        color: Qt.rgba(0.2, 0.6, 1, 0.14)
-                                        border.width: 1
-                                        border.color: Qt.rgba(0.2, 0.6, 1, 0.30)
-                                        Text {
-                                            id: dueTodayText
-                                            anchors.centerIn: parent
-                                            text: qsTr("\u23F3 %1 Due Today").arg(root.dueCompleteToday)
-                                            font.pixelSize: 11
-                                            font.bold: true
-                                            color: Constants.isDark ? "#70B8FF" : "#1A70D0"
-                                            font.family: Constants.fontFamily
-                                        }
-                                    }
+                                    overdueCount: root.overdueCount
+                                    urgentCount: root.urgentCount
+                                    pendingCount: Math.max(0, root.totalCount - root.totalCompleted)
+                                    dueTodayCount: root.dueCompleteToday
                                 }
                             }
                         }

@@ -6,6 +6,7 @@
         <file>AssignmentsPage.ui.qml</file>
         <file>AuroraBackground.qml</file>
         <file>Constants.qml</file>
+        <file>DynamicMetricBadge.qml</file>
         <file>GlassButton.ui.qml</file>
         <file>GlassDatePicker.ui.qml</file>
         <file>GlassTextField.ui.qml</file>
