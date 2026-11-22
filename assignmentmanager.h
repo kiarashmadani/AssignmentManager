@@ -83,6 +83,7 @@ public slots:
         bool isUrgent = false);
 
     void toggleCompleted(int row);
+    bool deleteAssignment(int row);
     void getCalendarOnline();
     void saveToFiles();
     void loadFromFiles();
@@ -95,6 +96,8 @@ signals:
     void validationError(const QString& msg);
     void onlineCalendarReady(int year, int month, int day, int hour, int minute);
     void statesChanged();
+    void assignmentToggled(const QString &title, bool isCompleted);
+    void assignmentDeleted(const QString &title);
 };
 
 #endif // ASSIGNMENTMANAGER_H

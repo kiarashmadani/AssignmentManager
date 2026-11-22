@@ -196,10 +196,29 @@ void AssignmentManager::toggleCompleted(int row)
         return;
 
     m_assignments[row].isCompleted = !m_assignments[row].isCompleted;
+    bool isCompleted = m_assignments[row].isCompleted;
+    QString title = m_assignments[row].title;
+
     QModelIndex idx = index(row);
     emit dataChanged(idx, idx, { IsCompletedRole, IsOverdueRole, IsUrgentRole });
     saveToFiles();
     emit statesChanged();
+    emit assignmentToggled(title, isCompleted);
+}
+
+bool AssignmentManager::deleteAssignment(int row)
+{
+    if (row < 0 || row >= static_cast<int>(m_assignments.size()))
+        return false;
+
+    QString title = m_assignments[row].title;
+    beginRemoveRows(QModelIndex(), row, row);
+    m_assignments.erase(m_assignments.begin() + row);
+    endRemoveRows();
+    saveToFiles();
+    emit statesChanged();
+    emit assignmentDeleted(title);
+    return true;
 }
 
 

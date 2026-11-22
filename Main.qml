@@ -122,6 +122,20 @@ Window {
             toast.showing = true
             toastTimer.restart()
         }
+        function onAssignmentToggled(title, isCompleted) {
+            toast.isError = false
+            toast.message = isCompleted
+                ? qsTr("🎉 Completed: %1").arg(title)
+                : qsTr("↩️ Restored: %1").arg(title)
+            toast.showing = true
+            toastTimer.restart()
+        }
+        function onAssignmentDeleted(title) {
+            toast.isError = false
+            toast.message = qsTr("🗑️ Deleted: %1").arg(title)
+            toast.showing = true
+            toastTimer.restart()
+        }
         function onOnlineCalendarReady(year, month, day, hour, minute) {
             appSettings.savedYear = year
             appSettings.savedMonth = month

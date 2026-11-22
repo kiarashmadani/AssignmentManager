@@ -19,7 +19,9 @@ Item {
     readonly property bool isWarningUrgent: isUrgent && !isCompleted && !isOverdue
     readonly property bool showWarning: isWarningOverdue || isWarningUrgent
     signal toggleRequested()
+    signal deleteRequested()
     property alias doneBox: doneBox
+    property alias deleteButton: deleteBtn
 
     implicitHeight: row.implicitHeight + 28 + 14
     implicitWidth: 360
@@ -217,6 +219,46 @@ Item {
                             font.bold: true
                             color: Constants.urgent
                             font.family: Constants.fontFamily
+                        }
+                    }
+
+                    // Delete Button
+                    Item {
+                        id: deleteBtn
+                        implicitWidth: 24
+                        implicitHeight: 24
+                        Layout.alignment: Qt.AlignVCenter
+
+                        scale: deleteTap.pressed ? 0.88 : (deleteHover.hovered ? 1.12 : 1.0)
+                        Behavior on scale { SpringAnimation { spring: 6; damping: 0.35 } }
+
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: 12
+                            color: deleteHover.hovered
+                                   ? Qt.rgba(1, 0.12, 0.22, 0.22)
+                                   : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.07) : Qt.rgba(0, 0, 0, 0.04))
+                            border.width: 1
+                            border.color: deleteHover.hovered
+                                          ? Constants.overdue
+                                          : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.06))
+                            Behavior on color { ColorAnimation { duration: 150 } }
+                            Behavior on border.color { ColorAnimation { duration: 150 } }
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: "\u2715"
+                                font.pixelSize: 11
+                                font.bold: true
+                                color: deleteHover.hovered ? Constants.overdue : Constants.mutedForeground
+                                Behavior on color { ColorAnimation { duration: 150 } }
+                            }
+                        }
+
+                        HoverHandler { id: deleteHover; cursorShape: Qt.PointingHandCursor }
+                        TapHandler {
+                            id: deleteTap
+                            onTapped: assignmentCard.deleteRequested()
                         }
                     }
                 }

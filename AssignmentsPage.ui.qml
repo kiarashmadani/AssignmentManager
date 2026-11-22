@@ -430,6 +430,12 @@ Item {
                             assignmentList.model.toggleCompleted(index)
                         }
                     }
+
+                    onDeleteRequested: {
+                        if (assignmentList.model && typeof assignmentList.model.deleteAssignment === "function") {
+                            assignmentList.model.deleteAssignment(index)
+                        }
+                    }
                 }
             }
         }
