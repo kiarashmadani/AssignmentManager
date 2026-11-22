@@ -284,7 +284,6 @@ Item {
                     Layout.fillWidth: true
                     Layout.topMargin: 4
                     spacing: 6
-                    implicitHeight: childrenRect.height
                     Layout.preferredHeight: childrenRect.height
 
                     // 1. Deadline Capsule Chip
