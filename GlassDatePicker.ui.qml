@@ -26,18 +26,20 @@ Item {
         color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.06)
     }
 
-    // ── 2. Drum Wheels & Delimiters (Filling Width) ──
+    // ── 2. Drum Wheels & Delimiters (Filling Width: Year / Month / Day) ──
     RowLayout {
         id: timeRow
         anchors.fill: parent
         spacing: 0
 
         TimeWheel {
-            id: dayWheel
+            id: yearWheel
             Layout.fillWidth: true
             Layout.fillHeight: true
-            model: 31
-            offset: 1
+            Layout.preferredWidth: 68
+            model: 20
+            wrap: false
+            offset: picker.firstYear
         }
 
         Text {
@@ -67,13 +69,11 @@ Item {
         }
 
         TimeWheel {
-            id: yearWheel
+            id: dayWheel
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.preferredWidth: 68
-            model: 20
-            wrap: false
-            offset: picker.firstYear
+            model: 31
+            offset: 1
         }
     }
 }

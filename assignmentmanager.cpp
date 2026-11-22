@@ -113,32 +113,16 @@ bool AssignmentManager::addAssignment(
 
 void AssignmentManager::getCalendarOnline()
 {
-    if (!m_netManager)
-        m_netManager = new QNetworkAccessManager(this);
+    QDate currentDate = QDate::currentDate();
+    QTime currentTime = QTime::currentTime();
 
-    QNetworkRequest req(QUrl("https://timeapi.io/api/Time/current/zone?timeZone=Asia/Tehran"));
+    int year = currentDate.year();
+    int month = currentDate.month();
+    int day = currentDate.day();
+    int hour = currentTime.hour();
+    int minute = currentTime.minute();
 
-    QNetworkReply *reply = m_netManager->get(req);
-    connect(reply, &QNetworkReply::finished, this, [this, reply](){
-        reply->deleteLater();
-        if (reply->error() != QNetworkReply::NoError)
-        {
-            qWarning() << "Failed to fetch todays calendar";
-            return;
-        }
-
-        QByteArray responseData = reply->readAll();
-        QJsonDocument doc = QJsonDocument::fromJson(responseData);
-        QJsonObject rootObj = doc.object();
-
-        int year = rootObj["year"].toInt();
-        int month = rootObj["month"].toInt();
-        int day = rootObj["day"].toInt();
-        int hour = rootObj["hour"].toInt();
-        int minute = rootObj["minute"].toInt();
-
-        emit onlineCalendarReady(year, month, day, hour, minute);
-    });
+    emit onlineCalendarReady(year, month, day, hour, minute);
 }
 
 void AssignmentManager::saveToFiles()
