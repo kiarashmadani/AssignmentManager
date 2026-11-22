@@ -132,3 +132,6 @@ ehthumbs.db
 # Linux
 *~
 .directory
+
+# Internal Product Strategy
+PRODUCT_STRATEGY.md
