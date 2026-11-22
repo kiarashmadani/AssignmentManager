@@ -6,8 +6,8 @@ import QtQuick.Effects
 Tumbler {
     id: wheel
     implicitWidth: 50
-    implicitHeight: 182
-    visibleItemCount: 7
+    implicitHeight: 130
+    visibleItemCount: 5
     property int offset: 0          // shown number = row + offset (days and months start at 1)
 
     wrap: true
@@ -22,21 +22,21 @@ Tumbler {
         readonly property real rawDisp: Tumbler.displacement
         readonly property real disp: Math.abs(rawDisp)
 
-        // Drum cylinder angular position in radians (+/-75 deg at displacement +/-3)
-        // 75 deg = 1.309 rad -> theta = rawDisp * (1.309 / 3) = rawDisp * 0.436
-        readonly property real theta: Math.max(-1.35, Math.min(1.35, rawDisp * 0.436))
+        // Drum cylinder angular position in radians (+/-65 deg at displacement +/-2)
+        // 65 deg = 1.134 rad -> theta = rawDisp * (1.134 / 2) = rawDisp * 0.567
+        readonly property real theta: Math.max(-1.25, Math.min(1.25, rawDisp * 0.567))
         readonly property real cosTheta: Math.max(0.08, Math.cos(theta))
-        readonly property real angleDeg: Math.max(-75, Math.min(75, rawDisp * 25.0))
+        readonly property real angleDeg: Math.max(-65, Math.min(65, rawDisp * 32.5))
 
         width: wheel.width
         height: wheel.height / wheel.visibleItemCount
 
         // 1. Apple Alarm App Opacity Falloff:
-        // Center is 1.0 (100%), 1 step away is ~0.45, 2 steps away is ~0.05, 3 steps is 0.0 (fade out)
+        // Center is 1.0 (100%), 1 step away is ~0.42, 2 steps away is 0.0 (fade out smoothly at edge)
         opacity: {
             if (disp <= 0.45) return 1.0
-            var factor = Math.max(0.0, 1.0 - (disp - 0.45) / 2.2)
-            return Math.pow(factor, 2.6)
+            var factor = Math.max(0.0, 1.0 - (disp - 0.45) / 1.55)
+            return Math.pow(factor, 2.0)
         }
 
         // 2. Physical cylinder foreshortening + 3D drum tilt:
@@ -62,8 +62,7 @@ Tumbler {
             id: numText
             anchors.centerIn: parent
             // Y-offset compresses item spacing towards the horizon curve:
-            // Delta Y = H * (2.29 * sin(theta) - rawDisp)
-            anchors.verticalCenterOffset: delegateItem.height * (2.29 * Math.sin(delegateItem.theta) - delegateItem.rawDisp)
+            anchors.verticalCenterOffset: delegateItem.height * (1.76 * Math.sin(delegateItem.theta) - delegateItem.rawDisp)
 
             text: (delegateItem.value < 10 ? "0" : "") + delegateItem.value
             color: delegateItem.disp < 0.45 ? Constants.foreground : Constants.mutedForeground

@@ -6,6 +6,7 @@
 #include <vector>
 #include <QDate>
 #include <QTime>
+#include <QDateTime>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QByteArray>
@@ -22,6 +23,7 @@ struct Assignment {
     QDate dueDate;
     QTime dueTime;
     bool isCompleted = false;
+    bool isUrgent = false;
 };
 
 class AssignmentManager : public QAbstractListModel
@@ -32,8 +34,11 @@ class AssignmentManager : public QAbstractListModel
     Q_PROPERTY(int      totalCount              READ totalCount             NOTIFY statesChanged FINAL)
     Q_PROPERTY(int      totalCompleted          READ totalCompleted         NOTIFY statesChanged FINAL)
     Q_PROPERTY(int      dueCompleteToday        READ dueCompleteToday       NOTIFY statesChanged FINAL)
+    Q_PROPERTY(int      overdueCount            READ overdueCount           NOTIFY statesChanged FINAL)
+    Q_PROPERTY(int      urgentCount             READ urgentCount            NOTIFY statesChanged FINAL)
     Q_PROPERTY(int      completionPercentage    READ completionPercentage   NOTIFY statesChanged FINAL)
-    Q_PROPERTY(qreal    completionRatio         READ completionRatio        NOTIFY statesChanged  FINAL)
+    Q_PROPERTY(qreal    completionRatio         READ completionRatio        NOTIFY statesChanged FINAL)
+    Q_PROPERTY(qreal    overdueRatio            READ overdueRatio           NOTIFY statesChanged FINAL)
 
 public:
     enum Roles {
@@ -43,7 +48,9 @@ public:
         DayRole,
         DeadlineHoursRole,
         DeadlineMinutesRole,
-        IsCompletedRole
+        IsCompletedRole,
+        IsOverdueRole,
+        IsUrgentRole
     };
 
     explicit AssignmentManager(QObject *parent = nullptr);
@@ -54,8 +61,11 @@ public:
     int totalCount() const;
     int totalCompleted() const;
     int dueCompleteToday() const;
+    int overdueCount() const;
+    int urgentCount() const;
     int completionPercentage() const;
     qreal completionRatio() const;
+    qreal overdueRatio() const;
 
 public slots:
     bool addAssignment(
@@ -63,7 +73,8 @@ public slots:
         const QString &description,
         const QString &course,
         int year, int month, int day,
-        int hour, int minute);
+        int hour, int minute,
+        bool isUrgent = false);
 
     void toggleCompleted(int row);
     void getCalendarOnline();

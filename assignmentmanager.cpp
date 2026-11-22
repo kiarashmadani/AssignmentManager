@@ -24,7 +24,9 @@ QHash<int, QByteArray> AssignmentManager::roleNames() const
         { DayRole,             "day" },
         { DeadlineHoursRole,   "deadlineHours" },
         { DeadlineMinutesRole, "deadlineMinutes" },
-        { IsCompletedRole,     "isCompleted" }
+        { IsCompletedRole,     "isCompleted" },
+        { IsOverdueRole,       "isOverdue" },
+        { IsUrgentRole,        "isUrgent" }
     };
 }
 
@@ -45,6 +47,14 @@ QVariant AssignmentManager::data(const QModelIndex &index, int role) const
         return item.course;
     case IsCompletedRole:
         return item.isCompleted;
+    case IsUrgentRole:
+        return item.isUrgent;
+    case IsOverdueRole: {
+        if (item.isCompleted)
+            return false;
+        QDateTime deadline(item.dueDate, item.dueTime);
+        return deadline < QDateTime::currentDateTime();
+    }
     case DayRole:
         if (item.dueDate == QDate::currentDate())
             return tr("Today");
@@ -65,7 +75,8 @@ bool AssignmentManager::addAssignment(
     const QString &description,
     const QString &course,
     int year, int month, int day,
-    int hour, int minute)
+    int hour, int minute,
+    bool isUrgent)
 {
     if (title.trimmed().isEmpty() || course.trimmed().isEmpty())
     {
@@ -87,6 +98,7 @@ bool AssignmentManager::addAssignment(
     addedAssignment.dueTime = QTime(hour, minute);
     addedAssignment.dueDate = dueDate;
     addedAssignment.isCompleted = false;
+    addedAssignment.isUrgent = isUrgent;
 
     int newRow = static_cast<int>(m_assignments.size());
     beginInsertRows(QModelIndex(), newRow, newRow);
@@ -147,6 +159,7 @@ void AssignmentManager::saveToFiles()
         obj["dueDate"]     = item.dueDate.toString(Qt::ISODate);
         obj["dueTime"]     = item.dueTime.toString("HH:mm");
         obj["isCompleted"] = item.isCompleted;
+        obj["isUrgent"]    = item.isUrgent;
 
         array.append(obj);
     }
@@ -186,6 +199,7 @@ void AssignmentManager::loadFromFiles()
         item.dueDate     = QDate::fromString(obj["dueDate"].toString(), Qt::ISODate);
         item.dueTime     = QTime::fromString(obj["dueTime"].toString(), "HH:mm");
         item.isCompleted = obj["isCompleted"].toBool();
+        item.isUrgent    = obj["isUrgent"].toBool();
 
         m_assignments.push_back(item);
     }
@@ -199,7 +213,7 @@ void AssignmentManager::toggleCompleted(int row)
 
     m_assignments[row].isCompleted = !m_assignments[row].isCompleted;
     QModelIndex idx = index(row);
-    emit dataChanged(idx, idx, { IsCompletedRole });
+    emit dataChanged(idx, idx, { IsCompletedRole, IsOverdueRole, IsUrgentRole });
     saveToFiles();
     emit statesChanged();
 }
@@ -232,6 +246,27 @@ int AssignmentManager::dueCompleteToday() const
     return count;
 }
 
+int AssignmentManager::overdueCount() const
+{
+    int count = 0;
+    QDateTime now = QDateTime::currentDateTime();
+    for (const auto &item : m_assignments) {
+        if (!item.isCompleted && QDateTime(item.dueDate, item.dueTime) < now)
+            count++;
+    }
+    return count;
+}
+
+int AssignmentManager::urgentCount() const
+{
+    int count = 0;
+    for (const auto &item : m_assignments) {
+        if (item.isUrgent && !item.isCompleted)
+            count++;
+    }
+    return count;
+}
+
 int AssignmentManager::completionPercentage() const
 {
     if (m_assignments.empty())
@@ -246,5 +281,13 @@ qreal AssignmentManager::completionRatio() const
         return 0.0;
 
     return static_cast<qreal>(totalCompleted()) / static_cast<qreal>(m_assignments.size());
+}
+
+qreal AssignmentManager::overdueRatio() const
+{
+    if (m_assignments.empty())
+        return 0.0;
+
+    return static_cast<qreal>(overdueCount()) / static_cast<qreal>(m_assignments.size());
 }
 

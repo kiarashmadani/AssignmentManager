@@ -154,6 +154,7 @@ Window {
         function onClicked() {
             addPage.titleError = false
             addPage.courseError = false
+            addPage.isUrgent = false
             addSheet.open()
         }
     }
@@ -162,6 +163,7 @@ Window {
         function onClicked() {
             addPage.titleError = false
             addPage.courseError = false
+            addPage.isUrgent = false
             addSheet.close()
         }
     }
@@ -182,13 +184,15 @@ Window {
                 addPage.descriptionText,
                 addPage.courseText,
                 year, month, day,
-                hour, minute
+                hour, minute,
+                addPage.isUrgent
             )
 
             if (ok) {
                 addPage.titleText = ""
                 addPage.descriptionText = ""
                 addPage.courseText = ""
+                addPage.isUrgent = false
                 addPage.titleError = false
                 addPage.courseError = false
 

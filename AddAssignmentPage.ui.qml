@@ -19,6 +19,7 @@ Item {
 
     property bool titleError: false
     property bool courseError: false
+    property bool isUrgent: false
 
     // ── Drag Handle (Pinned at Top) ──
     Item {
@@ -232,6 +233,93 @@ Item {
                         id: timePicker
                         Layout.fillWidth: true
                         Layout.preferredWidth: 42
+                    }
+                }
+            }
+
+            // ── GROUP 4: Priority & Urgency ──
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 6
+
+                Text {
+                    text: qsTr("PRIORITY & URGENCY")
+                    color: Constants.mutedForeground
+                    font.pixelSize: Constants.captionSize - 1
+                    font.family: Constants.fontFamily
+                    font.weight: Font.DemiBold
+                    Layout.leftMargin: 6
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    implicitHeight: 56
+                    radius: 16
+                    color: Constants.card
+                    opacity: 0.88
+                    border.width: root.isUrgent ? 1.5 : 1
+                    border.color: root.isUrgent
+                                  ? Constants.destructive
+                                  : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.08))
+                    Behavior on border.color { ColorAnimation { duration: 180 } }
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.leftMargin: 16
+                        anchors.rightMargin: 16
+                        spacing: 12
+
+                        Text {
+                            text: "\uD83D\uDD25"
+                            font.pixelSize: 20
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 1
+
+                            Text {
+                                text: qsTr("Mark as Urgent")
+                                color: root.isUrgent ? Constants.destructive : Constants.foreground
+                                font.pixelSize: Constants.bodySize
+                                font.family: Constants.fontFamily
+                                font.weight: Font.Medium
+                            }
+
+                            Text {
+                                text: qsTr("Highlights card and adds warning badge")
+                                color: Constants.mutedForeground
+                                font.pixelSize: Constants.captionSize - 1
+                                font.family: Constants.fontFamily
+                            }
+                        }
+
+                        // iOS-style liquid toggle switch
+                        Rectangle {
+                            implicitWidth: 48
+                            implicitHeight: 28
+                            radius: 14
+                            color: root.isUrgent
+                                   ? Constants.destructive
+                                   : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.18) : Qt.rgba(0, 0, 0, 0.14))
+                            Behavior on color { ColorAnimation { duration: 200 } }
+
+                            Rectangle {
+                                x: root.isUrgent ? parent.width - width - 3 : 3
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 22
+                                height: 22
+                                radius: 11
+                                color: "#FFFFFF"
+                                Behavior on x {
+                                    SpringAnimation { spring: 5.0; damping: 0.40 }
+                                }
+                            }
+                        }
+                    }
+
+                    TapHandler {
+                        onTapped: root.isUrgent = !root.isUrgent
                     }
                 }
             }

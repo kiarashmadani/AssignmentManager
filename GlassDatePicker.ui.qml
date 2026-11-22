@@ -11,7 +11,7 @@ Item {
     property int firstYear: 2026
 
     implicitWidth: 200
-    implicitHeight: 182
+    implicitHeight: 130
     clip: true
 
     // ── 1. Apple Selection Capsule (Center Active Row) ──
@@ -21,7 +21,7 @@ Item {
         anchors.right: parent.right
         anchors.leftMargin: 4
         anchors.rightMargin: 4
-        height: 38
+        height: 36
         radius: 9
         color: Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.06)
     }

@@ -17,8 +17,11 @@ Item {
     readonly property int totalCount: mgr ? mgr.totalCount : 0
     readonly property int totalCompleted: mgr ? mgr.totalCompleted : 0
     readonly property int dueCompleteToday: mgr ? mgr.dueCompleteToday : 0
+    readonly property int overdueCount: mgr ? mgr.overdueCount : 0
+    readonly property int urgentCount: mgr ? mgr.urgentCount : 0
     readonly property int completionPercentage: mgr ? mgr.completionPercentage : 0
     readonly property real completionRatio: mgr ? mgr.completionRatio : 0.0
+    readonly property real overdueRatio: mgr ? mgr.overdueRatio : 0.0
 
     Rectangle {
         id: page
@@ -55,7 +58,7 @@ Item {
                     // ── Hero Liquid Glass Progress Widget ──
                     Rectangle {
                         Layout.fillWidth: true
-                        implicitHeight: heroContent.implicitHeight + 28
+                        implicitHeight: heroContent.implicitHeight + 32
                         radius: 20
 
                         // Translucent frosted gradient base
@@ -90,6 +93,7 @@ Item {
 
                             // Circular Progress Ring Graphic
                             Item {
+                                Layout.alignment: Qt.AlignVCenter
                                 implicitWidth: 64
                                 implicitHeight: 64
 
@@ -133,6 +137,37 @@ Item {
                                     }
                                 }
 
+                                // Overdue warning arc in destructive red (sweeps counter-clockwise from 12 o'clock)
+                                Shape {
+                                    anchors.fill: parent
+                                    layer.enabled: true
+                                    layer.samples: 4
+                                    visible: root.overdueRatio > 0.001
+
+                                    ShapePath {
+                                        strokeWidth: 6
+                                        strokeColor: Constants.destructive
+                                        capStyle: ShapePath.RoundCap
+                                        fillColor: "transparent"
+
+                                        PathAngleArc {
+                                            centerX: 32
+                                            centerY: 32
+                                            radiusX: 29
+                                            radiusY: 29
+                                            startAngle: -90
+                                            sweepAngle: -root.overdueRatio * 360
+
+                                            Behavior on sweepAngle {
+                                                SpringAnimation {
+                                                    spring: 3.5
+                                                    damping: 0.38
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
                                 // Centered percentage text
                                 ColumnLayout {
                                     anchors.centerIn: parent
@@ -151,6 +186,7 @@ Item {
                             // Motivation & Stats Column
                             ColumnLayout {
                                 Layout.fillWidth: true
+                                Layout.alignment: Qt.AlignVCenter
                                 spacing: 4
 
                                 Text {
@@ -171,10 +207,52 @@ Item {
                                     font.family: Constants.fontFamily
                                 }
 
-                                // Mini Metric Badges Row
-                                RowLayout {
-                                    spacing: 8
+                                // Mini Metric Badges Flow (wraps badges to next row on narrow screens)
+                                Flow {
+                                    Layout.fillWidth: true
                                     Layout.topMargin: 4
+                                    spacing: 6
+                                    Layout.preferredHeight: childrenRect.height
+
+                                    // Overdue warning badge (ONLY shown when overdueCount > 0!)
+                                    Rectangle {
+                                        visible: root.overdueCount > 0
+                                        implicitWidth: overdueBadgeText.implicitWidth + 14
+                                        implicitHeight: 22
+                                        radius: 11
+                                        color: Qt.rgba(1, 0.2, 0.3, 0.18)
+                                        border.width: 1
+                                        border.color: Qt.rgba(1, 0.2, 0.3, 0.45)
+                                        Text {
+                                            id: overdueBadgeText
+                                            anchors.centerIn: parent
+                                            text: qsTr("\u26A0\uFE0F %1 Overdue").arg(root.overdueCount)
+                                            font.pixelSize: 11
+                                            font.bold: true
+                                            color: Constants.destructive
+                                            font.family: Constants.fontFamily
+                                        }
+                                    }
+
+                                    // Urgent warning badge (ONLY shown when urgentCount > 0!)
+                                    Rectangle {
+                                        visible: root.urgentCount > 0
+                                        implicitWidth: urgentBadgeText.implicitWidth + 14
+                                        implicitHeight: 22
+                                        radius: 11
+                                        color: Qt.rgba(1, 0.25, 0.35, 0.18)
+                                        border.width: 1
+                                        border.color: Qt.rgba(1, 0.25, 0.35, 0.40)
+                                        Text {
+                                            id: urgentBadgeText
+                                            anchors.centerIn: parent
+                                            text: qsTr("\uD83D\uDD25 %1 Urgent").arg(root.urgentCount)
+                                            font.pixelSize: 11
+                                            font.bold: true
+                                            color: Constants.destructive
+                                            font.family: Constants.fontFamily
+                                        }
+                                    }
 
                                     // Pending badge
                                     Rectangle {
@@ -379,6 +457,7 @@ Item {
                     courseColor: model.courseColor || Constants.accent
                     isUrgent: Boolean(model.isUrgent)
                     isCompleted: Boolean(model.isCompleted)
+                    isOverdue: Boolean(model.isOverdue)
 
                     readonly property bool matchesFilter: {
                         if (root.activeFilter === 1) return model.day === "Today" || model.day === qsTr("Today")

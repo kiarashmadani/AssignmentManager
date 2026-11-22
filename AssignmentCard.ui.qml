@@ -14,6 +14,8 @@ Item {
     property color courseColor: Constants.accent
     property bool isUrgent: false
     property bool isCompleted: false
+    property bool isOverdue: false
+    readonly property bool showWarning: (isOverdue || isUrgent) && !isCompleted
     signal toggleRequested()
     property alias doneBox: doneBox
 
@@ -77,11 +79,21 @@ Item {
             opacity: Constants.isDark ? 0.50 : 0.30
         }
 
-        // Clean hairline perimeter border
-        border.width: 1
-        border.color: cardHover.hovered
-            ? Qt.rgba(1, 1, 1, 0.22)
-            : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.14) : Qt.rgba(0, 0, 0, 0.08))
+        // Subtle red warning glaze when overdue
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
+            color: Constants.destructive
+            opacity: assignmentCard.showWarning ? (Constants.isDark ? 0.12 : 0.06) : 0.0
+            Behavior on opacity { NumberAnimation { duration: 200 } }
+        }
+
+        // Clean hairline perimeter border (glows red when overdue)
+        border.width: assignmentCard.showWarning ? 1.5 : 1
+        border.color: assignmentCard.showWarning
+            ? Constants.destructive
+            : (cardHover.hovered ? Qt.rgba(1, 1, 1, 0.22) : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.14) : Qt.rgba(0, 0, 0, 0.08)))
+        Behavior on border.color { ColorAnimation { duration: 180 } }
 
         HoverHandler { id: cardHover }
         TapHandler { id: cardTap }
@@ -177,23 +189,24 @@ Item {
                         Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
                     }
 
-                    // Priority micro badge if High or Medium
+                    // Urgent priority sticker badge
                     Rectangle {
-                        visible: assignmentCard.priority === "High" || assignmentCard.priority === "Urgent"
-                        implicitWidth: priorityText.implicitWidth + 12
-                        implicitHeight: 20
-                        radius: 10
+                        visible: assignmentCard.isUrgent && !assignmentCard.isCompleted
+                        implicitWidth: priorityText.implicitWidth + 14
+                        implicitHeight: 22
+                        radius: 11
                         color: Qt.rgba(1, 0.25, 0.35, 0.18)
                         border.width: 1
-                        border.color: Qt.rgba(1, 0.25, 0.35, 0.35)
+                        border.color: Qt.rgba(1, 0.25, 0.35, 0.40)
 
                         Text {
                             id: priorityText
                             anchors.centerIn: parent
-                            text: "\uD83D\uDD25 High"
-                            font.pixelSize: 10
+                            text: "\uD83D\uDD25 " + qsTr("Urgent")
+                            font.pixelSize: 11
                             font.bold: true
                             color: Constants.destructive
+                            font.family: Constants.fontFamily
                         }
                     }
                 }
@@ -224,12 +237,12 @@ Item {
                         implicitWidth: deadlineRow.implicitWidth + 20
                         implicitHeight: 26
                         radius: 13
-                        color: assignmentCard.isUrgent
-                            ? Qt.rgba(1, 0.3, 0.2, 0.14)
+                        color: assignmentCard.showWarning
+                            ? Qt.rgba(1, 0.25, 0.35, 0.18)
                             : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.04))
                         border.width: 1
-                        border.color: assignmentCard.isUrgent
-                            ? Qt.rgba(1, 0.3, 0.2, 0.32)
+                        border.color: assignmentCard.showWarning
+                            ? Qt.rgba(1, 0.25, 0.35, 0.40)
                             : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.06))
 
                         RowLayout {
@@ -238,15 +251,15 @@ Item {
                             spacing: 5
 
                             Text {
-                                text: assignmentCard.isUrgent ? "\u26A0\uFE0F" : "\u23F1"
+                                text: assignmentCard.isOverdue ? "\u26A0\uFE0F" : (assignmentCard.isUrgent ? "\uD83D\uDD25" : "\u23F1")
                                 font.pixelSize: 11
-                                color: assignmentCard.isUrgent ? Constants.destructive : Constants.primary
+                                color: assignmentCard.showWarning ? Constants.destructive : Constants.primary
                             }
 
                             Text {
                                 font.family: Constants.fontFamily
-                                text: qsTr("Due ") + assignmentCard.day + " " + assignmentCard.deadlineHours + ":" + assignmentCard.deadlineMinutes
-                                color: assignmentCard.isUrgent ? Constants.destructive : Constants.foreground
+                                text: (assignmentCard.isOverdue ? qsTr("Overdue ") : qsTr("Due ")) + assignmentCard.day + " " + assignmentCard.deadlineHours + ":" + assignmentCard.deadlineMinutes
+                                color: assignmentCard.showWarning ? Constants.destructive : Constants.foreground
                                 font.pixelSize: Constants.captionSize - 1
                                 font.weight: Font.Medium
                             }
