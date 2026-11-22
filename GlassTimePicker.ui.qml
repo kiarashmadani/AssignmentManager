@@ -35,7 +35,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             model: 24
-            currentIndex: 23
+            currentIndex: 12
         }
 
         Text {
@@ -54,7 +54,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             model: 60
-            currentIndex: 59
+            currentIndex: 0
         }
     }
 }

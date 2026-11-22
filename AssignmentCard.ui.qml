@@ -15,7 +15,9 @@ Item {
     property bool isUrgent: false
     property bool isCompleted: false
     property bool isOverdue: false
-    readonly property bool showWarning: (isOverdue || isUrgent) && !isCompleted
+    readonly property bool isWarningOverdue: isOverdue && !isCompleted
+    readonly property bool isWarningUrgent: isUrgent && !isCompleted && !isOverdue
+    readonly property bool showWarning: isWarningOverdue || isWarningUrgent
     signal toggleRequested()
     property alias doneBox: doneBox
 
@@ -79,20 +81,25 @@ Item {
             opacity: Constants.isDark ? 0.50 : 0.30
         }
 
-        // Subtle red warning glaze when overdue
+        // Subtle warning glaze: Red for Overdue, Flame Orange for Urgent
         Rectangle {
             anchors.fill: parent
             radius: parent.radius
-            color: Constants.destructive
+            color: assignmentCard.isWarningOverdue
+                   ? Constants.destructive
+                   : (assignmentCard.isWarningUrgent ? Constants.urgent : "transparent")
             opacity: assignmentCard.showWarning ? (Constants.isDark ? 0.12 : 0.06) : 0.0
             Behavior on opacity { NumberAnimation { duration: 200 } }
+            Behavior on color { ColorAnimation { duration: 200 } }
         }
 
-        // Clean hairline perimeter border (glows red when overdue)
+        // Clean hairline perimeter border (glows Red when overdue, Flame Orange when urgent)
         border.width: assignmentCard.showWarning ? 1.5 : 1
-        border.color: assignmentCard.showWarning
+        border.color: assignmentCard.isWarningOverdue
             ? Constants.destructive
-            : (cardHover.hovered ? Qt.rgba(1, 1, 1, 0.22) : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.14) : Qt.rgba(0, 0, 0, 0.08)))
+            : (assignmentCard.isWarningUrgent
+               ? Constants.urgent
+               : (cardHover.hovered ? Qt.rgba(1, 1, 1, 0.22) : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.14) : Qt.rgba(0, 0, 0, 0.08))))
         Behavior on border.color { ColorAnimation { duration: 180 } }
 
         HoverHandler { id: cardHover }
@@ -189,15 +196,15 @@ Item {
                         Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.InOutQuad } }
                     }
 
-                    // Urgent priority sticker badge
+                    // Urgent priority sticker badge (Flame Orange)
                     Rectangle {
                         visible: assignmentCard.isUrgent && !assignmentCard.isCompleted
                         implicitWidth: priorityText.implicitWidth + 14
                         implicitHeight: 22
                         radius: 11
-                        color: Qt.rgba(1, 0.25, 0.35, 0.18)
+                        color: Qt.rgba(1, 0.55, 0.14, 0.18)
                         border.width: 1
-                        border.color: Qt.rgba(1, 0.25, 0.35, 0.40)
+                        border.color: Qt.rgba(1, 0.55, 0.14, 0.45)
 
                         Text {
                             id: priorityText
@@ -205,7 +212,7 @@ Item {
                             text: "\uD83D\uDD25 " + qsTr("Urgent")
                             font.pixelSize: 11
                             font.bold: true
-                            color: Constants.destructive
+                            color: Constants.urgent
                             font.family: Constants.fontFamily
                         }
                     }
@@ -237,13 +244,17 @@ Item {
                         implicitWidth: deadlineRow.implicitWidth + 20
                         implicitHeight: 26
                         radius: 13
-                        color: assignmentCard.showWarning
-                            ? Qt.rgba(1, 0.25, 0.35, 0.18)
-                            : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.04))
+                        color: assignmentCard.isWarningOverdue
+                            ? Qt.rgba(1, 0.22, 0.28, 0.18)
+                            : (assignmentCard.isWarningUrgent
+                               ? Qt.rgba(1, 0.55, 0.14, 0.18)
+                               : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.04)))
                         border.width: 1
-                        border.color: assignmentCard.showWarning
-                            ? Qt.rgba(1, 0.25, 0.35, 0.40)
-                            : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.06))
+                        border.color: assignmentCard.isWarningOverdue
+                            ? Qt.rgba(1, 0.22, 0.28, 0.45)
+                            : (assignmentCard.isWarningUrgent
+                               ? Qt.rgba(1, 0.55, 0.14, 0.45)
+                               : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.06)))
 
                         RowLayout {
                             id: deadlineRow
@@ -253,13 +264,17 @@ Item {
                             Text {
                                 text: assignmentCard.isOverdue ? "\u26A0\uFE0F" : (assignmentCard.isUrgent ? "\uD83D\uDD25" : "\u23F1")
                                 font.pixelSize: 11
-                                color: assignmentCard.showWarning ? Constants.destructive : Constants.primary
+                                color: assignmentCard.isWarningOverdue
+                                       ? Constants.destructive
+                                       : (assignmentCard.isWarningUrgent ? Constants.urgent : Constants.primary)
                             }
 
                             Text {
                                 font.family: Constants.fontFamily
                                 text: (assignmentCard.isOverdue ? qsTr("Overdue ") : qsTr("Due ")) + assignmentCard.day + " " + assignmentCard.deadlineHours + ":" + assignmentCard.deadlineMinutes
-                                color: assignmentCard.showWarning ? Constants.destructive : Constants.foreground
+                                color: assignmentCard.isWarningOverdue
+                                       ? Constants.destructive
+                                       : (assignmentCard.isWarningUrgent ? Constants.urgent : Constants.foreground)
                                 font.pixelSize: Constants.captionSize - 1
                                 font.weight: Font.Medium
                             }

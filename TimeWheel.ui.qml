@@ -10,7 +10,7 @@ Tumbler {
     visibleItemCount: 5
     property int offset: 0          // shown number = row + offset (days and months start at 1)
 
-    wrap: true
+    wrap: false
 
     delegate: Item {
         id: delegateItem

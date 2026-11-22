@@ -340,6 +340,8 @@ QtObject {
     Behavior on destructive { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
     property color destructiveForeground: theme.destructiveForeground
     Behavior on destructiveForeground { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
+    property color urgent: isDark ? "#FF8822" : "#D84315"
+    Behavior on urgent { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
     property color border: theme.border
     Behavior on border { ColorAnimation { duration: themeTransition; easing.type: Easing.InOutQuad } }
     property color ring: theme.ring

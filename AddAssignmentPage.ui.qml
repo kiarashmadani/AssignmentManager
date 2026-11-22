@@ -259,7 +259,7 @@ Item {
                     opacity: 0.88
                     border.width: root.isUrgent ? 1.5 : 1
                     border.color: root.isUrgent
-                                  ? Constants.destructive
+                                  ? Constants.urgent
                                   : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.12) : Qt.rgba(0, 0, 0, 0.08))
                     Behavior on border.color { ColorAnimation { duration: 180 } }
 
@@ -280,7 +280,7 @@ Item {
 
                             Text {
                                 text: qsTr("Mark as Urgent")
-                                color: root.isUrgent ? Constants.destructive : Constants.foreground
+                                color: root.isUrgent ? Constants.urgent : Constants.foreground
                                 font.pixelSize: Constants.bodySize
                                 font.family: Constants.fontFamily
                                 font.weight: Font.Medium
@@ -300,7 +300,7 @@ Item {
                             implicitHeight: 28
                             radius: 14
                             color: root.isUrgent
-                                   ? Constants.destructive
+                                   ? Constants.urgent
                                    : (Constants.isDark ? Qt.rgba(1, 1, 1, 0.18) : Qt.rgba(0, 0, 0, 0.14))
                             Behavior on color { ColorAnimation { duration: 200 } }
 

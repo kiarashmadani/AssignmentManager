@@ -240,16 +240,16 @@ Item {
                                         implicitWidth: urgentBadgeText.implicitWidth + 14
                                         implicitHeight: 22
                                         radius: 11
-                                        color: Qt.rgba(1, 0.25, 0.35, 0.18)
+                                        color: Qt.rgba(1, 0.55, 0.14, 0.18)
                                         border.width: 1
-                                        border.color: Qt.rgba(1, 0.25, 0.35, 0.40)
+                                        border.color: Qt.rgba(1, 0.55, 0.14, 0.45)
                                         Text {
                                             id: urgentBadgeText
                                             anchors.centerIn: parent
                                             text: qsTr("\uD83D\uDD25 %1 Urgent").arg(root.urgentCount)
                                             font.pixelSize: 11
                                             font.bold: true
-                                            color: Constants.destructive
+                                            color: Constants.urgent
                                             font.family: Constants.fontFamily
                                         }
                                     }
