@@ -72,16 +72,18 @@ Item {
 
                             // Student Avatar Orb
                             Rectangle {
-                                width: 54
-                                height: 54
+                                Layout.preferredWidth: 54
+                                Layout.preferredHeight: 54
                                 radius: 27
                                 color: Constants.primary
                                 opacity: 0.88
 
-                                Text {
+                                Image {
                                     anchors.centerIn: parent
-                                    text: "\uD83C\uDF93" // Graduation cap
-                                    font.pixelSize: 24
+                                    source: "icons/graduation.svg"
+                                    sourceSize.width: 26
+                                    sourceSize.height: 26
+                                    fillMode: Image.PreserveAspectFit
                                 }
                             }
 

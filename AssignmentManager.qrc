@@ -21,5 +21,12 @@
         <file>SettingsPage.ui.qml</file>
         <file>ThemeButton.ui.qml</file>
         <file>TimeWheel.ui.qml</file>
+        <file>icons/warning.svg</file>
+        <file>icons/flame.svg</file>
+        <file>icons/clock.svg</file>
+        <file>icons/pin.svg</file>
+        <file>icons/hourglass.svg</file>
+        <file>icons/book.svg</file>
+        <file>icons/graduation.svg</file>
     </qresource>
 </RCC>

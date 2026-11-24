@@ -53,6 +53,13 @@ qt_add_qml_module(appAssignmentManager
         fonts/Vazirmatn-Light.ttf
         fonts/SF-Pro-Text-Regular.otf
         fonts/SF-Pro-Text-Semibold.otf
+        icons/warning.svg
+        icons/flame.svg
+        icons/clock.svg
+        icons/pin.svg
+        icons/hourglass.svg
+        icons/book.svg
+        icons/graduation.svg
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

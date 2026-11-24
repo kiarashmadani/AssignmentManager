@@ -187,9 +187,12 @@ Item {
                         anchors.rightMargin: 16
                         spacing: 10
 
-                        Text {
-                            text: "\uD83D\uDCDA" // Book emoji / icon
-                            font.pixelSize: 16
+                        Image {
+                            source: "icons/book.svg"
+                            sourceSize.width: 16
+                            sourceSize.height: 16
+                            fillMode: Image.PreserveAspectFit
+                            Layout.alignment: Qt.AlignVCenter
                         }
 
                         TextField {
@@ -269,9 +272,12 @@ Item {
                         anchors.rightMargin: 16
                         spacing: 12
 
-                        Text {
-                            text: "\uD83D\uDD25"
-                            font.pixelSize: 20
+                        Image {
+                            source: "icons/flame.svg"
+                            sourceSize.width: 18
+                            sourceSize.height: 18
+                            fillMode: Image.PreserveAspectFit
+                            Layout.alignment: Qt.AlignVCenter
                         }
 
                         ColumnLayout {

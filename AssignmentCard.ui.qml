@@ -204,21 +204,35 @@ Item {
                     // Urgent priority sticker badge (Flame Orange)
                     Rectangle {
                         visible: assignmentCard.isUrgent && !assignmentCard.isCompleted
-                        implicitWidth: priorityText.implicitWidth + 14
+                        implicitWidth: priorityRow.implicitWidth + 14
                         implicitHeight: 22
                         radius: 11
                         color: Qt.rgba(1, 0.55, 0.14, 0.18)
                         border.width: 1
                         border.color: Qt.rgba(1, 0.55, 0.14, 0.45)
 
-                        Text {
-                            id: priorityText
+                        RowLayout {
+                            id: priorityRow
                             anchors.centerIn: parent
-                            text: "\uD83D\uDD25 " + qsTr("Urgent")
-                            font.pixelSize: 11
-                            font.bold: true
-                            color: Constants.urgent
-                            font.family: Constants.fontFamily
+                            spacing: 4
+
+                            Image {
+                                source: "icons/flame.svg"
+                                sourceSize.width: 12
+                                sourceSize.height: 12
+                                fillMode: Image.PreserveAspectFit
+                                Layout.alignment: Qt.AlignVCenter
+                            }
+
+                            Text {
+                                id: priorityText
+                                text: qsTr("Urgent")
+                                font.pixelSize: 11
+                                font.bold: true
+                                color: Constants.urgent
+                                font.family: Constants.fontFamily
+                                Layout.alignment: Qt.AlignVCenter
+                            }
                         }
                     }
 
@@ -310,13 +324,14 @@ Item {
                             anchors.rightMargin: 10
                             spacing: 5
 
-                            Text {
+                            Image {
                                 Layout.alignment: Qt.AlignVCenter
-                                text: assignmentCard.isOverdue ? "\u26A0\uFE0F" : (assignmentCard.isUrgent ? "\uD83D\uDD25" : "\u23F1")
-                                font.pixelSize: 11
-                                color: assignmentCard.isWarningOverdue
-                                       ? Constants.destructive
-                                       : (assignmentCard.isWarningUrgent ? Constants.urgent : Constants.primary)
+                                source: assignmentCard.isOverdue
+                                        ? "icons/warning.svg"
+                                        : (assignmentCard.isUrgent ? "icons/flame.svg" : "icons/clock.svg")
+                                sourceSize.width: 12
+                                sourceSize.height: 12
+                                fillMode: Image.PreserveAspectFit
                             }
 
                             Text {
