@@ -1,0 +1,104 @@
+name: Deploy MashghBan Web to GitHub Pages
+
+# ── TRIGGERS ──────────────────────────────────────────────────────────
+# Tells GitHub WHEN to run this pipeline:
+# 1. Automatically whenever changes are pushed to 'main'
+# 2. Manually via a "Run workflow" button in the GitHub Actions tab
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# ── PERMISSIONS ────────────────────────────────────────────────────────
+# Required by GitHub Pages to securely deploy via OpenID Connect (OIDC)
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# ── CONCURRENCY ────────────────────────────────────────────────────────
+# Prevents race conditions if multiple commits are pushed in quick succession
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # ═════════════════════════════════════════════════════════════════════
+  # JOB 1: CI (Continuous Integration - Build & Package)
+  # ═════════════════════════════════════════════════════════════════════
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Clone the repository inside the fresh virtual machine
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      # Step 2: Install Ninja build system
+      - name: Install Ninja
+        run: sudo apt-get update && sudo apt-get install -y ninja-build
+
+      # Step 3: Install Emscripten SDK version 3.1.56 (exact requirement for Qt 6.8.3)
+      - name: Setup Emscripten SDK
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: '3.1.56'
+
+      # Step 4: Install Qt 6.8.3 for WebAssembly
+      # Automatically downloads official binaries and sets up native host tools (moc, rcc, qml)
+      - name: Install Qt 6.8.3 WebAssembly
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          target: 'wasm'
+          arch: 'wasm_singlethread'
+          cache: true
+
+      # Step 5: Configure CMake pointing to Qt's toolchain and the Emscripten compiler
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build \
+            -G "Ninja" \
+            -DCMAKE_TOOLCHAIN_FILE=${{ env.QT_ROOT_DIR }}/lib/cmake/Qt6/qt.toolchain.cmake \
+            -DQT_HOST_PATH=${{ env.QT_HOST_PATH }} \
+            -DCMAKE_BUILD_TYPE=Release
+
+      # Step 6: Compile C++ and QML into WebAssembly (.wasm + .js)
+      - name: Build WebAssembly Application
+        run: cmake --build build --config Release
+
+      # Step 7: Assemble the clean distribution folder for GitHub Pages
+      - name: Prepare Deployment Artifacts
+        run: |
+          mkdir -p dist
+          # Copy custom HTML loader and fallback mirror
+          cp index.html dist/index.html
+          cp index.html dist/appAssignmentManager.html
+          # Copy compiled WebAssembly and runtime scripts
+          cp build/appAssignmentManager.js dist/
+          cp build/appAssignmentManager.wasm dist/
+          cp build/qtloader.js dist/
+          # Copy vector SVG icons and language translation dictionaries
+          cp -r icons dist/
+          cp build/*.qm dist/ || true
+          # Add custom domain CNAME record
+          echo "app.mashghban.ir" > dist/CNAME
+
+      # Step 8: Upload the static bundle to GitHub Pages staging
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'dist'
+
+  # ═════════════════════════════════════════════════════════════════════
+  # JOB 2: CD (Continuous Deployment - Publish to the Live Web)
+  # ═════════════════════════════════════════════
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
