@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>MashghBan • Assignment Manager</title>
+  <link rel="icon" type="image/svg+xml" href="icons/flame.svg">
+
+  <script>
+    // Synchronously read the saved Qt theme BEFORE anything renders!
+    try {
+      const savedTheme = JSON.parse(localStorage.getItem('mashghban_theme') || '{}');
+      if (savedTheme.bg) {
+        document.documentElement.style.setProperty('--bg-color', savedTheme.bg);
+      }
+      if (savedTheme.primary) {
+        document.documentElement.style.setProperty('--primary-color', savedTheme.primary);
+      }
+      if (savedTheme.accent) {
+        document.documentElement.style.setProperty('--accent-color', savedTheme.accent);
+      }
+      if (savedTheme.secondary) {
+        document.documentElement.style.setProperty('--secondary-color', savedTheme.secondary);
+      }
+      if (savedTheme.isDark === false) {
+        document.documentElement.style.setProperty('--card-bg', 'rgba(255, 255, 255, 0.75)');
+        document.documentElement.style.setProperty('--card-border', 'rgba(0, 0, 0, 0.08)');
+        document.documentElement.style.setProperty('--card-shadow', 'rgba(0, 0, 0, 0.08)');
+        document.documentElement.style.setProperty('--text-color', '#1C1917');
+        document.documentElement.style.setProperty('--subtext-color', 'rgba(0, 0, 0, 0.55)');
+        document.documentElement.style.setProperty('--track-bg', 'rgba(0, 0, 0, 0.06)');
+      }
+    } catch (e) {
+      console.warn("Theme load fallback:", e);
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg-color: #120E16;
+      --primary-color: #F05270;
+      --accent-color: #FF9100;
+      --secondary-color: #8A3B58;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --card-shadow: rgba(0, 0, 0, 0.65);
+      --text-color: #FFFFFF;
+      --subtext-color: rgba(255, 255, 255, 0.45);
+      --track-bg: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-color);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease;
+    }
+
+    #screen {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    /* Ambient Aurora Motion Canvas (Inheriting Active Theme) */
+    #loader-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-color);
+      overflow: hidden;
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.55s;
+    }
+
+    .aurora-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      opacity: 0.70;
+      will-change: transform;
+    }
+
+    .orb-primary {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+      top: -10%;
+      left: 15%;
+      animation: driftPrimary 8s ease-in-out infinite alternate;
+    }
+
+    .orb-accent {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+      bottom: 5%;
+      right: 15%;
+      animation: driftAccent 9s ease-in-out infinite alternate;
+    }
+
+    .orb-secondary {
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, var(--secondary-color) 0%, transparent 70%);
+      top: 35%;
+      left: 30%;
+      animation: pulseSecondary 7s ease-in-out infinite alternate;
+    }
+
+    @keyframes driftPrimary {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(60px, 50px) scale(1.15); }
+    }
+
+    @keyframes driftAccent {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-50px, -40px) scale(1.12); }
+    }
+
+    @keyframes pulseSecondary {
+      0% { transform: scale(0.92); opacity: 0.5; }
+      100% { transform: scale(1.15); opacity: 0.85; }
+    }
+
+    /* Apple-Style Translucent Frosted Glass Card */
+    .glass-card {
+      position: relative;
+      z-index: 10;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 42px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 30px 70px var(--card-shadow), inset 0 1px 1px rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      min-width: 300px;
+      max-width: 340px;
+      animation: cardFloat 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes cardFloat {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-6px); }
+    }
+
+    /* Icon Halo */
+    .icon-wrapper {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .icon-halo {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+      opacity: 0.35;
+      animation: haloGlow 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes haloGlow {
+      0% { transform: scale(0.85); opacity: 0.3; }
+      100% { transform: scale(1.30); opacity: 0.85; }
+    }
+
+    .app-icon {
+      width: 52px;
+      height: 52px;
+      z-index: 2;
+      filter: drop-shadow(0 6px 12px var(--accent-color));
+    }
+
+    /* Brand Typography */
+    .app-title {
+      font-size: 27px;
+      font-weight: 700;
+      color: var(--text-color);
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .app-subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--subtext-color);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    /* Sleek Glowing Progress Bar */
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: var(--track-bg);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 45%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      box-shadow: 0 0 12px var(--accent-color);
+      animation: progressSweep 1.6s ease-in-out infinite;
+    }
+
+    @keyframes progressSweep {
+      0% { left: -50%; width: 30%; }
+      50% { width: 55%; }
+      100% { left: 110%; width: 30%; }
+    }
+
+    .status-text {
+      margin-top: 16px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--subtext-color);
+      letter-spacing: 0.2px;
+    }
+
+    .dots span {
+      animation: blinkDots 1.4s infinite;
+      opacity: 0;
+    }
+    .dots span:nth-child(1) { animation-delay: 0.0s; }
+    .dots span:nth-child(2) { animation-delay: 0.2s; }
+    .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes blinkDots {
+      0%, 20% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body onload="init()">
+
+  <!-- Ambient Aurora & Liquid Glass Loading Overlay -->
+  <div id="loader-overlay">
+    <div class="aurora-orb orb-primary"></div>
+    <div class="aurora-orb orb-accent"></div>
+    <div class="aurora-orb orb-secondary"></div>
+
+    <div class="glass-card">
+      <div class="icon-wrapper">
+        <div class="icon-halo"></div>
+        <img src="icons/flame.svg" class="app-icon" alt="MashghBan Icon">
+      </div>
+
+      <h1 class="app-title">MashghBan</h1>
+      <span class="app-subtitle">Assignment Manager</span>
+
+      <div class="progress-track">
+        <div class="progress-bar"></div>
+      </div>
+
+      <div id="status-label" class="status-text">
+        Launching application<span class="dots"><span>.</span><span>.</span><span>.</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Qt WebAssembly Canvas Container -->
+  <div id="screen"></div>
+
+  <script>
+    async function init() {
+      const overlay = document.getElementById('loader-overlay');
+      const statusLabel = document.getElementById('status-label');
+      const screen = document.getElementById('screen');
+
+      try {
+        await qtLoad({
+          qt: {
+            onLoaded: () => {
+              // Smooth fluid fade & scale reveal into the Qt UI
+              overlay.style.opacity = '0';
+              overlay.style.transform = 'scale(1.025)';
+              setTimeout(() => {
+                overlay.style.visibility = 'hidden';
+              }, 550);
+            },
+            onExit: (data) => {
+              overlay.style.visibility = 'visible';
+              overlay.style.opacity = '1';
+              overlay.style.transform = 'scale(1)';
+              statusLabel.innerText = 'Application Exited';
+            },
+            entryFunction: window.appAssignmentManager_entry,
+            containerElements: [screen],
+          }
+        });
+      } catch (e) {
+        console.error(e);
+        statusLabel.innerText = 'Failed to load application';
+      }
+    }
+  </script>
+  <script src="appAssignmentManager.js"></script>
+  <script src="qtloader.js"></script>
+</body>
+</html>

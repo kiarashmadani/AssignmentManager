@@ -30,6 +30,19 @@ Window {
         addPage.timePicker.minuteWheel.currentIndex = appSettings.savedMinute
 
         engine.getCalendarOnline()
+        syncCurrentThemeToWeb()
+    }
+
+    function syncCurrentThemeToWeb() {
+        if (engine && typeof engine.syncThemeToWeb === "function") {
+            engine.syncThemeToWeb(
+                Constants.background.toString(),
+                Constants.primary.toString(),
+                Constants.accent.toString(),
+                Constants.secondary.toString(),
+                Constants.isDark
+            );
+        }
     }
 
     Settings {
@@ -59,6 +72,7 @@ Window {
         function onClicked(button) {
             Constants.themeIndex = button.themeIndex
             appSettings.themeIndex = button.themeIndex
+            syncCurrentThemeToWeb()
         }
     }
     Connections {

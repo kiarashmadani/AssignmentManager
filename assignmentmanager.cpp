@@ -1,3 +1,7 @@
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 #include "assignmentmanager.h"
 
 AssignmentManager::AssignmentManager(QObject *parent)
@@ -125,16 +129,25 @@ void AssignmentManager::getCalendarOnline()
     emit onlineCalendarReady(year, month, day, hour, minute);
 }
 
-void AssignmentManager::saveToFiles()
+static QString getStorageFilePath()
 {
+#ifdef __EMSCRIPTEN__
+    return QStringLiteral("/assignments_data/assignments.json");
+#else
     QString folderPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDir dir(folderPath);
     if (!dir.exists())
         dir.mkpath(".");
-    QString filePath = dir.filePath("assignments.json");
+    return dir.filePath("assignments.json");
+#endif
+}
+
+void AssignmentManager::saveToFiles()
+{
+    QString filePath = getStorageFilePath();
 
     QJsonArray array;
-    foreach (const auto& item, m_assignments)
+    for (const auto& item : m_assignments)
     {
         QJsonObject obj;
         obj["title"]       = item.title;
@@ -154,16 +167,21 @@ void AssignmentManager::saveToFiles()
     {
         file.write(doc.toJson());
         file.close();
+
+#ifdef __EMSCRIPTEN__
+        EM_ASM(
+            FS.syncfs(false, function (err) {
+                if (err) console.error("IDBFS save error:", err);
+                else console.log("Assignments saved to browser IndexedDB!");
+            });
+        );
+#endif
     }
 }
 
 void AssignmentManager::loadFromFiles()
 {
-    QString folderPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QDir dir(folderPath);
-    if (!dir.exists())
-        dir.mkpath(".");
-    QString filePath = dir.filePath("assignments.json");
+    QString filePath = getStorageFilePath();
 
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
@@ -172,7 +190,10 @@ void AssignmentManager::loadFromFiles()
     QByteArray data = file.readAll();
     QJsonDocument doc = QJsonDocument::fromJson(data);
     QJsonArray array = doc.array();
-    foreach (const auto& val, array)
+
+    beginResetModel();
+    m_assignments.clear();
+    for (const auto& val : array)
     {
         QJsonObject obj = val.toObject();
         Assignment item;
@@ -187,6 +208,7 @@ void AssignmentManager::loadFromFiles()
 
         m_assignments.push_back(item);
     }
+    endResetModel();
     emit statesChanged();
 }
 
@@ -319,5 +341,30 @@ qreal AssignmentManager::urgentPendingRatio() const
         return 0.0;
 
     return static_cast<qreal>(urgentPendingCount()) / static_cast<qreal>(m_assignments.size());
+}
+
+void AssignmentManager::syncThemeToWeb(const QString &bg, const QString &primary, const QString &accent, const QString &secondary, bool isDark)
+{
+#ifdef __EMSCRIPTEN__
+    EM_ASM({
+        try {
+            localStorage.setItem('mashghban_theme', JSON.stringify({
+                bg: UTF8ToString($0),
+                primary: UTF8ToString($1),
+                accent: UTF8ToString($2),
+                secondary: UTF8ToString($3),
+                isDark: Boolean($4)
+            }));
+        } catch (e) {
+            console.error("Theme sync error:", e);
+        }
+    }, bg.toUtf8().constData(), primary.toUtf8().constData(), accent.toUtf8().constData(), secondary.toUtf8().constData(), isDark ? 1 : 0);
+#else
+    Q_UNUSED(bg);
+    Q_UNUSED(primary);
+    Q_UNUSED(accent);
+    Q_UNUSED(secondary);
+    Q_UNUSED(isDark);
+#endif
 }
 

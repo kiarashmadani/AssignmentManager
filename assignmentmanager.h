@@ -87,6 +87,7 @@ public slots:
     void getCalendarOnline();
     void saveToFiles();
     void loadFromFiles();
+    void syncThemeToWeb(const QString &bg, const QString &primary, const QString &accent, const QString &secondary, bool isDark);
 
 private:
     std::vector<Assignment> m_assignments;

@@ -84,3 +84,23 @@ install(TARGETS appAssignmentManager
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+if(EMSCRIPTEN)
+    target_link_options(appAssignmentManager PRIVATE
+        -lidbfs.js
+        --pre-js ${CMAKE_CURRENT_SOURCE_DIR}/idbfs_mount.js
+    )
+
+# Automatically copy index.html and icons to the build output directory
+add_custom_command(TARGET appAssignmentManager POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_CURRENT_SOURCE_DIR}/index.html
+        $<TARGET_FILE_DIR:appAssignmentManager>/index.html
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_CURRENT_SOURCE_DIR}/index.html
+        $<TARGET_FILE_DIR:appAssignmentManager>/appAssignmentManager.html
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/icons
+        $<TARGET_FILE_DIR:appAssignmentManager>/icons
+)
+endif()
