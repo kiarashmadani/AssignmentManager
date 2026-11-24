@@ -18,8 +18,23 @@ Window {
 
     // On startup: apply the saved theme and language, and hook up the C++ model
     Component.onCompleted: {
-        Constants.themeIndex = appSettings.themeIndex
-        Qt.uiLanguage = appSettings.languageCode
+        var webTheme = engine.getSavedThemeIndex()
+        var webLang = engine.getSavedLanguage()
+
+        if (webTheme >= 0) {
+            Constants.themeIndex = webTheme
+            appSettings.themeIndex = webTheme
+        } else {
+            Constants.themeIndex = appSettings.themeIndex
+        }
+
+        if (webLang && webLang.length > 0) {
+            Qt.uiLanguage = webLang
+            appSettings.languageCode = webLang
+        } else {
+            Qt.uiLanguage = appSettings.languageCode
+        }
+
         mainScreen.assignmentsPage.assignmentList.model = engine
 
         // Set wheels immediately from saved cache (offline-ready!)
@@ -35,13 +50,18 @@ Window {
 
     function syncCurrentThemeToWeb() {
         if (engine && typeof engine.syncThemeToWeb === "function") {
-            engine.syncThemeToWeb(
-                Constants.background.toString(),
-                Constants.primary.toString(),
-                Constants.accent.toString(),
-                Constants.secondary.toString(),
-                Constants.isDark
-            );
+            var t = Constants.theme || (Constants.themes ? Constants.themes[Constants.themeIndex] : null)
+            if (t) {
+                engine.syncThemeToWeb(
+                    Constants.themeIndex,
+                    Qt.uiLanguage || "en",
+                    t.background.toString(),
+                    t.primary.toString(),
+                    t.accent.toString(),
+                    t.secondary.toString(),
+                    Boolean(t.dark)
+                );
+            }
         }
     }
 
@@ -62,6 +82,14 @@ Window {
     }
 
     Connections {
+        target: Constants
+        function onThemeIndexChanged() {
+            appSettings.themeIndex = Constants.themeIndex
+            syncCurrentThemeToWeb()
+        }
+    }
+
+    Connections {
         target: mainScreen.pages
         function onCurrentIndexChanged() {
             mainScreen.navBar.currentIndex = mainScreen.pages.currentIndex
@@ -71,8 +99,6 @@ Window {
         target: mainScreen.settingsPage.themeGroup
         function onClicked(button) {
             Constants.themeIndex = button.themeIndex
-            appSettings.themeIndex = button.themeIndex
-            syncCurrentThemeToWeb()
         }
     }
     Connections {
@@ -80,6 +106,7 @@ Window {
         function onClicked(button) {
             Qt.uiLanguage = button.languageCode
             appSettings.languageCode = button.languageCode
+            syncCurrentThemeToWeb()
         }
     }
 

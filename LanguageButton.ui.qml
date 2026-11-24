@@ -5,11 +5,12 @@ Button {
     id: languageButton
     property int languageIndex: 0   // 0 = English, 1 = Persian
     readonly property string languageCode: languageIndex === 0 ? "en" : "fa"
-    checkable: true
+    checkable: false
     hoverEnabled: true
 
     // selected when it is the app's current language
     checked: Qt.uiLanguage === languageCode
+    onClicked: Qt.uiLanguage = languageCode
 
     // each language is written in its own language, so no qsTr here
     text: languageIndex === 0 ? "English" : "فارسی"

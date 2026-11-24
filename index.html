@@ -23,12 +23,19 @@
         document.documentElement.style.setProperty('--secondary-color', savedTheme.secondary);
       }
       if (savedTheme.isDark === false) {
-        document.documentElement.style.setProperty('--card-bg', 'rgba(255, 255, 255, 0.75)');
+        document.documentElement.style.setProperty('--card-bg', 'rgba(255, 255, 255, 0.78)');
         document.documentElement.style.setProperty('--card-border', 'rgba(0, 0, 0, 0.08)');
-        document.documentElement.style.setProperty('--card-shadow', 'rgba(0, 0, 0, 0.08)');
+        document.documentElement.style.setProperty('--card-shadow', 'rgba(0, 0, 0, 0.10)');
         document.documentElement.style.setProperty('--text-color', '#1C1917');
         document.documentElement.style.setProperty('--subtext-color', 'rgba(0, 0, 0, 0.55)');
-        document.documentElement.style.setProperty('--track-bg', 'rgba(0, 0, 0, 0.06)');
+        document.documentElement.style.setProperty('--track-bg', 'rgba(0, 0, 0, 0.08)');
+      } else if (savedTheme.isDark === true) {
+        document.documentElement.style.setProperty('--card-bg', 'rgba(255, 255, 255, 0.05)');
+        document.documentElement.style.setProperty('--card-border', 'rgba(255, 255, 255, 0.12)');
+        document.documentElement.style.setProperty('--card-shadow', 'rgba(0, 0, 0, 0.65)');
+        document.documentElement.style.setProperty('--text-color', '#FFFFFF');
+        document.documentElement.style.setProperty('--subtext-color', 'rgba(255, 255, 255, 0.45)');
+        document.documentElement.style.setProperty('--track-bg', 'rgba(255, 255, 255, 0.08)');
       }
     } catch (e) {
       console.warn("Theme load fallback:", e);
@@ -306,6 +313,7 @@
           qt: {
             onLoaded: () => {
               // Smooth fluid fade & scale reveal into the Qt UI
+              overlay.style.pointerEvents = 'none';
               overlay.style.opacity = '0';
               overlay.style.transform = 'scale(1.025)';
               setTimeout(() => {

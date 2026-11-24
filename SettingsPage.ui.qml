@@ -123,7 +123,7 @@ Item {
                             Layout.leftMargin: 6
                         }
 
-                        ButtonGroup { id: themeGroup }
+                        ButtonGroup { id: themeGroup; exclusive: false }
 
                         GridLayout {
                             columns: 3
@@ -155,7 +155,7 @@ Item {
                             Layout.leftMargin: 6
                         }
 
-                        ButtonGroup { id: languageGroup }
+                        ButtonGroup { id: languageGroup; exclusive: false }
 
                         RowLayout {
                             Layout.fillWidth: true

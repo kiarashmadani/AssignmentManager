@@ -6,10 +6,11 @@ Button {
     id: themeButton
     property int themeIndex: 0
     readonly property var theme: Constants.themes[themeIndex]
-    checkable: true
+    checkable: false
     hoverEnabled: true
 
     checked: Constants.themeIndex === themeIndex
+    onClicked: Constants.themeIndex = themeIndex
 
     implicitWidth: 120
     implicitHeight: 48

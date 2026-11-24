@@ -343,28 +343,68 @@ qreal AssignmentManager::urgentPendingRatio() const
     return static_cast<qreal>(urgentPendingCount()) / static_cast<qreal>(m_assignments.size());
 }
 
-void AssignmentManager::syncThemeToWeb(const QString &bg, const QString &primary, const QString &accent, const QString &secondary, bool isDark)
+void AssignmentManager::syncThemeToWeb(int themeIndex, const QString &languageCode, const QString &bg, const QString &primary, const QString &accent, const QString &secondary, bool isDark)
 {
 #ifdef __EMSCRIPTEN__
     EM_ASM({
         try {
             localStorage.setItem('mashghban_theme', JSON.stringify({
-                bg: UTF8ToString($0),
-                primary: UTF8ToString($1),
-                accent: UTF8ToString($2),
-                secondary: UTF8ToString($3),
-                isDark: Boolean($4)
+                themeIndex: $0,
+                languageCode: UTF8ToString($1),
+                bg: UTF8ToString($2),
+                primary: UTF8ToString($3),
+                accent: UTF8ToString($4),
+                secondary: UTF8ToString($5),
+                isDark: Boolean($6)
             }));
         } catch (e) {
             console.error("Theme sync error:", e);
         }
-    }, bg.toUtf8().constData(), primary.toUtf8().constData(), accent.toUtf8().constData(), secondary.toUtf8().constData(), isDark ? 1 : 0);
+    }, themeIndex, languageCode.toUtf8().constData(), bg.toUtf8().constData(), primary.toUtf8().constData(), accent.toUtf8().constData(), secondary.toUtf8().constData(), isDark ? 1 : 0);
 #else
+    Q_UNUSED(themeIndex);
+    Q_UNUSED(languageCode);
     Q_UNUSED(bg);
     Q_UNUSED(primary);
     Q_UNUSED(accent);
     Q_UNUSED(secondary);
     Q_UNUSED(isDark);
+#endif
+}
+
+int AssignmentManager::getSavedThemeIndex() const
+{
+#ifdef __EMSCRIPTEN__
+    return EM_ASM_INT({
+        try {
+            var data = JSON.parse(localStorage.getItem('mashghban_theme') || '{}');
+            if (typeof data.themeIndex === 'number' && data.themeIndex >= 0) {
+                return data.themeIndex;
+            }
+        } catch(e) {}
+        return -1;
+    });
+#else
+    return -1;
+#endif
+}
+
+QString AssignmentManager::getSavedLanguage() const
+{
+#ifdef __EMSCRIPTEN__
+    int langId = EM_ASM_INT({
+        try {
+            var data = JSON.parse(localStorage.getItem('mashghban_theme') || '{}');
+            if (data.languageCode === 'fa') return 2;
+            if (data.languageCode === 'en') return 1;
+        } catch(e) {}
+        return 0;
+    });
+    if (langId == 2) return QStringLiteral("fa");
+    if (langId == 1) return QStringLiteral("en");
+    return QString();
+#else
+    return QString();
 #endif
 }
 
