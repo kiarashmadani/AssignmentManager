@@ -43,7 +43,7 @@ Item {
                 clip: true
                 spacing: 0
                 topMargin: topBlurStrip.height + 8
-                bottomMargin: 96 // Ensures cards scroll comfortably above the floating NavBar
+                bottomMargin: 114 // Ensures cards scroll comfortably above the floating NavBar
 
                 // Smooth momentum scrolling
                 flickDeceleration: 1800

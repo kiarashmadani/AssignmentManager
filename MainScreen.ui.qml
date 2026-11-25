@@ -249,6 +249,6 @@ Item {
         blurSource: page
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottomMargin: Constants.padding
+        anchors.bottomMargin: 34  // raised above iOS Home Indicator (~20-34px from bottom)
     }
 }

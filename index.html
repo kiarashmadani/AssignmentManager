@@ -303,6 +303,106 @@
   <div id="screen"></div>
 
   <script>
+    // Qt 6.8.3 sends TouchCancel to QML but removes its WASM touch entry
+    // only on pointerup. Cancel the gesture first, then clear the stale IDs.
+    (function installQtTouchRecovery(screen) {
+      const activeTouches = new Map();
+      const capture = { capture: true, passive: true };
+
+      function qtClientArea(event) {
+        // Qt's listener is on this element inside its open shadow root.
+        return event.composedPath().find(
+          node => node.classList?.contains('qt-window-contents')
+        );
+      }
+
+      screen.addEventListener('pointerdown', event => {
+        if (event.pointerType !== 'touch') return;
+        const target = qtClientArea(event);
+        if (!target) return;
+        activeTouches.set(event.pointerId, {
+          target,
+          pointerId: event.pointerId,
+          pointerType: event.pointerType,
+          clientX: event.clientX,
+          clientY: event.clientY,
+          width: event.width,
+          height: event.height,
+          isPrimary: event.isPrimary,
+          bubbles: true,
+          cancelable: true,
+          composed: false
+        });
+      }, capture);
+
+      function ignoreUntrackedTouch(event) {
+        if (event.pointerType === 'touch' && qtClientArea(event)
+            && !activeTouches.has(event.pointerId)) {
+          // Qt would otherwise recreate the entry on a late move or release.
+          event.stopImmediatePropagation();
+        }
+      }
+
+      screen.addEventListener('pointermove', ignoreUntrackedTouch, capture);
+      screen.addEventListener('pointerup', event => {
+        ignoreUntrackedTouch(event);
+        if (event.pointerType === 'touch') activeTouches.delete(event.pointerId);
+      }, capture);
+
+      function clearQtTouch(touch) {
+        const { target, ...eventInit } = touch;
+        const releaseCapture = target.releasePointerCapture;
+        const ownRelease = Object.getOwnPropertyDescriptor(target, 'releasePointerCapture');
+
+        // Qt releases capture before erasing the ID. If Safari has already
+        // retired that ID, the native release call can throw.
+        target.releasePointerCapture = function(pointerId) {
+          if (pointerId !== touch.pointerId || this.hasPointerCapture(pointerId)) {
+            releaseCapture.call(this, pointerId);
+          }
+        };
+        try {
+          target.dispatchEvent(new PointerEvent('pointerup', eventInit));
+        } finally {
+          if (ownRelease) {
+            Object.defineProperty(target, 'releasePointerCapture', ownRelease);
+          } else {
+            delete target.releasePointerCapture;
+          }
+        }
+      }
+
+      function cancelActiveTouches() {
+        const touches = [...activeTouches.values()].filter(touch => touch.target.isConnected);
+        activeTouches.clear();
+        const first = touches[0];
+        if (!first) return;
+
+        // Qt cancels the screen's touch sequence on the first event and ignores
+        // subsequent touch-end events until a new touch begins. Keep the
+        // synthetic events inside Qt's shadow root.
+        const { target, ...eventInit } = first;
+        target.dispatchEvent(new PointerEvent('pointercancel', eventInit));
+        for (const touch of touches) {
+          clearQtTouch(touch);
+        }
+      }
+
+      screen.addEventListener('pointercancel', event => {
+        if (event.pointerType !== 'touch' || !qtClientArea(event)) return;
+        // A late native cancel for an already-cleared ID would recreate it.
+        event.stopImmediatePropagation();
+        if (activeTouches.has(event.pointerId)) cancelActiveTouches();
+      }, capture);
+
+      screen.addEventListener('touchcancel', cancelActiveTouches, capture);
+      document.addEventListener('visibilitychange', cancelActiveTouches);
+      window.addEventListener('pagehide', cancelActiveTouches);
+      window.addEventListener('pageshow', event => {
+        if (event.persisted) cancelActiveTouches();
+      });
+    })(document.getElementById('screen'));
+
     async function init() {
       const overlay = document.getElementById('loader-overlay');
       const statusLabel = document.getElementById('status-label');

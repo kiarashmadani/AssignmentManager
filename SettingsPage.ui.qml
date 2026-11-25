@@ -25,7 +25,7 @@ Item {
                 anchors.leftMargin: Constants.padding
                 anchors.rightMargin: Constants.padding
                 topMargin: topBlurStrip.height + 8
-                bottomMargin: 96
+                bottomMargin: 114
                 contentWidth: width
                 contentHeight: settingsLayout.implicitHeight + 20
                 clip: true
