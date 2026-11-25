@@ -96,6 +96,7 @@ bool AssignmentManager::addAssignment(
     }
 
     Assignment addedAssignment;
+
     addedAssignment.title = title.trimmed();
     addedAssignment.description = description.trimmed();
     addedAssignment.course = course.trimmed();
@@ -104,11 +105,21 @@ bool AssignmentManager::addAssignment(
     addedAssignment.isCompleted = false;
     addedAssignment.isUrgent = isUrgent;
 
+    addedAssignment.id =
+        addedAssignment.dueTime.hour() +
+        addedAssignment.dueTime.minute() +
+        addedAssignment.dueDate.day() +
+        addedAssignment.dueDate.month() +
+        addedAssignment.dueDate.year() +
+        QDateTime::currentSecsSinceEpoch();
+
     int newRow = static_cast<int>(m_assignments.size());
     beginInsertRows(QModelIndex(), newRow, newRow);
     m_assignments.push_back(addedAssignment);
     saveToFiles();
     endInsertRows();
+
+    scheduleNotification(addedAssignment);
     emit statesChanged();
     return true;
 }
@@ -407,4 +418,73 @@ QString AssignmentManager::getSavedLanguage() const
     return QString();
 #endif
 }
+
+QVector<QDateTime> AssignmentManager::calculateNotificationTime(const Assignment &assignment)
+{
+    QDateTime deadline(assignment.dueDate, assignment.dueTime);
+
+    return {
+        deadline.addDays(-2),
+        deadline.addDays(-1),
+        deadline.addSecs(-12 * 3600),
+        deadline.addSecs(-6 * 3600),
+        deadline.addSecs(-3600)
+    };
+}
+
+void AssignmentManager::scheduleNotification(const Assignment &assignment)
+{
+#ifdef Q_OS_ANDROID
+
+    if (assignment.isCompleted)
+        return;
+
+    QVector<QDateTime> times = calculateNotificationTime(assignment);
+
+    QJniObject context = QNativeInterface::QAndroidApplication::context();
+
+    const QStringList descriptions = {
+        tr("in 2 days"),
+        tr("tomorrow"),
+        tr("in 12 hours"),
+        tr("in 6 hours"),
+        tr("in 1 hour")
+    };
+
+    for (int i = 0; i < times.size(); i++)
+    {
+        // has passed?
+        if (times[i] <= QDateTime::currentDateTime())
+            continue;
+
+        const int notificationID =
+            static_cast<int>(assignment.id*10 + i);
+
+        const jlong timestamp =
+            static_cast<jlong>(times[i].toMSecsSinceEpoch());
+
+        QString message = QString(tr("%1 is %2!"))
+        .arg(assignment.title)
+        .arg(descriptions[i]);
+
+        QJniObject javaMessage = QJniObject::fromString(message);
+
+        QJniObject::callStaticMethod<void>(
+            "org/qtproject/example/NotificationScheduler",
+            "schedule",
+            "(Landroid/content/Context;IJLjava/lang/String;)V",
+            context.object<jobject>(),
+            notificationID,
+            timestamp,
+            javaMessage.object<jstring>()
+        );
+
+        qDebug().noquote() << "Notification message:" << message;
+    }
+
+#endif
+
+}
+
+
 

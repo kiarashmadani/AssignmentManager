@@ -3,7 +3,7 @@
 
 #include <QAbstractListModel>
 #include <qqml.h>
-#include <vector>
+#include <QVector>
 #include <QDate>
 #include <QTime>
 #include <QDateTime>
@@ -16,7 +16,13 @@
 #include <QStandardPaths>
 #include <QDir>
 
+#ifdef Q_OS_ANDROID
+#include <QJniObject>
+#include <QCoreApplication>
+#endif
+
 struct Assignment {
+    int id;
     QString title;
     QString description;
     QString course;
@@ -92,8 +98,11 @@ public slots:
     QString getSavedLanguage() const;
 
 private:
-    std::vector<Assignment> m_assignments;
+    QVector<Assignment> m_assignments;
     QNetworkAccessManager *m_netManager = nullptr;
+
+    QVector<QDateTime> calculateNotificationTime(const Assignment& assignment);
+    void scheduleNotification(const Assignment& assignment);
 
 signals:
     void validationError(const QString& msg);
